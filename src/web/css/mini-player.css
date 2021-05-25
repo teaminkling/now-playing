@@ -1,5 +1,25 @@
-@import 'variables.css';
 @import url('https://fonts.googleapis.com/css?family=Montserrat:500,700');
+
+/* CSS Variables. */
+
+:root {
+    --BASE-SPACEMENT: 4px;
+    --WINDOW-WIDTH: 250px;
+    --MAX-HEIGHT-PLAYLISTS-CONTAINER: 300px;
+    --space-sm: var(--BASE-SPACEMENT);
+    --space-md: calc(var(--BASE-SPACEMENT) * 2);
+    --space-lg: calc(var(--BASE-SPACEMENT) * 3);
+    --space-xl: calc(var(--BASE-SPACEMENT) * 4);
+    --font-size-sm: 12px;
+    --font-size-md: 14px;
+    --font-size-lg: 16px;
+    --font-size-xl: 24px;
+    --color-primary: rgb(255, 255, 255);
+    --color-secondary: rgb(177, 176, 175);
+    --spotify-green: rgb(0, 183, 95);
+}
+
+/* Main CSS definition. */
 
 html {
     font-family: 'Montserrat', sans-serif;
@@ -7,7 +27,7 @@ html {
 }
 
 body {
-    background-color: #000;
+    background-color: rgb(0, 0, 0);
     margin: 0;
     padding: var(--space-xl);
 }

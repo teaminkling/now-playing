@@ -1,0 +1,333 @@
+/**
+ * All code related to the mini-player web component.
+ */
+
+// noinspection InnerHTMLJS
+
+import path from "path";
+
+import { BrowserWindow, ipcRenderer, IpcRendererEvent, Menu } from 'electron';
+
+import { APP_NAME, MAIN_WINDOW_HEIGHT, MAIN_WINDOW_WIDTH } from '../constants';
+
+let currentUriOfAddPage: string;
+
+export function handleMiniPlayer() {
+  /* Create the mini-player web view. */
+
+  const miniPlayer = new BrowserWindow({
+    /* Size. */
+
+    width: MAIN_WINDOW_WIDTH,
+    height: MAIN_WINDOW_HEIGHT,
+
+    /* Meta-information. */
+
+    title: APP_NAME,
+
+    /* Abilities. */
+
+    resizable: false,
+    movable: false,
+    minimizable: false,
+    maximizable: false,
+    closable: false,
+    alwaysOnTop: true,
+    fullscreenable: false,
+
+    /* Display options. */
+
+    show: false,
+    frame: false,
+
+    /* Other options. */
+
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false,
+      enableRemoteModule: true,
+    },
+  });
+
+  /* Configure what can't be constructed with options. */
+
+  miniPlayer.setVisibleOnAllWorkspaces(true);
+
+  /* When the app is enabled, configure the application menu. This is made visible if the mini-player is visible. */
+
+  Menu.setApplicationMenu(Menu.buildFromTemplate([
+    {
+      label: 'Edit',
+      submenu: [
+        { label: 'Copy', accelerator: 'CmdOrCtrl+C' },
+        { label: 'Paste', accelerator: 'CmdOrCtrl+V' },
+        { label: 'Select All', accelerator: 'CmdOrCtrl+A' },
+      ],
+    },
+  ]));
+
+  addRendererListeners(miniPlayer);
+
+  /* Populate the window with HTML and set the initial loading state. */
+
+  miniPlayer.loadFile(path.join(__dirname, 'web/mini-player.html')).then(null);
+  ipcRenderer.send('loading', {});
+
+  /* Add event listeners. */
+
+  miniPlayer.on('hide', () => {
+    hide('add-container');
+    show('player-container');
+  });
+
+  return miniPlayer;
+}
+
+/**
+ * Add all renderer listeners.
+ *
+ * @param miniPlayer the mini-player {@link BrowserWindow}
+ */
+function addRendererListeners(miniPlayer: BrowserWindow) {
+  ipcRenderer.on('currentPlaybackReceived', (_event: IpcRendererEvent, message) => {
+    setPlayer(message);
+  });
+
+  ipcRenderer.on('loading', () => setLoader());
+  ipcRenderer.on('noContent', () => setNoContent());
+  ipcRenderer.on('playlistsReceived', (_event, playlists) => {
+    openPlaylistsContainer(playlists);
+  });
+
+  ipcRenderer.on('trackAdded', () => closePlaylistsContainer());
+  ipcRenderer.on('fixHeight', (_event, height) => {
+    miniPlayer.setSize(MAIN_WINDOW_WIDTH, height, true);
+  });
+}
+
+function getPlayerTemplate(data: any) {
+  const shuffleIconClass: string = data.shuffleState ? 'random-icon--active' : 'random-icon--inactive';
+  const playingIconClass: string = data.isPlaying ? 'fa-pause pause-icon' : 'fa-play play-icon';
+
+  return `
+    <div class="spacement-bottom-md">
+      <img src="${data.albumImageSrc}" class="album-cover" alt="the album cover">
+    </div>
+    <p class="spacement-bottom-sm music-name">${data.musicName}</p>
+    <p class="spacement-bottom-sm album-name">${data.albumName}</p>
+    <p class="spacement-bottom-lg">${data.artistName}</p>
+    <div class="spacement-bottom-lg progress-bar-container">
+      <div id="progress-bar" class="progress-bar"></div>
+    </div>
+    <div class="player-controls">
+      <div id="shuffle-button" class="random-icon-container">
+        <i class="fas fa-random random-icon ${shuffleIconClass}"></i>
+      </div>
+      <div id="previous-button" class="control-icon-container"><i class="fas fa-step-backward control-icon"></i></div>
+      <div id="play-button" class="play-container">
+        <i class="fas ${playingIconClass}"></i>
+      </div>
+      <div id="next-button" class="control-icon-container"><i class="fas fa-step-forward control-icon"></i></div>
+      <div id="add-button" class="add-icon-container"><i class="fas fa-plus control-icon"></i></div>
+    </div>
+  `;
+}
+
+function getAddTemplate() {
+  return `
+    <div id="add-back-button" class="add-option-container spacement-bottom-xl">
+      <i class="fas fa-chevron-left control-icon text-color-secondary"></i>
+      <p class="spacement-left-lg text-color-secondary">Back</p>
+    </div>
+    <p id="add-save-button" class="add-option-container spacement-bottom-md">Save to Your Library</p>
+    <div id="add-playlist-button" class="add-option-container">
+      <i id="add-playlist-icon" class="fas fa-chevron-right control-icon"></i>
+      <p class="spacement-left-lg">Add to Playlist</p>
+    </div>
+    <div id="playlists-container" class="playlists-container" style="display: none;"></div>
+  `;
+}
+
+function getPlaylistTemplate(data: any) {
+  return `
+    <p id="playlist-${data.id}" class="spacement-left-lg spacement-top-md text-align-left">${data.name}</p>
+  `;
+}
+
+function show(containerId: string) {
+  const container: HTMLElement = document.getElementById(containerId)!;
+
+  container.style.display = 'block';
+}
+
+function hide(containerId: string) {
+  const container = document.getElementById(containerId)!;
+
+  container.style.display = 'none';
+}
+
+function fixWindowHeight() {
+  const height = document.body.scrollHeight;
+
+  ipcRenderer.send('fixHeight', height);
+}
+
+function setPlayer(data: any) {
+  const addContainerElement: HTMLElement = document.getElementById('add-container')!;
+
+  if (addContainerElement.style.display === 'block') {
+    return;
+  }
+
+  hide('loader-container');
+  hide('no-content-container');
+  show('player-container');
+
+  const playerContainer = document.getElementById('player-container')!;
+
+  playerContainer.innerHTML = getPlayerTemplate(data);
+
+  setProgressBar(data.currentProgress, data.musicDuration);
+  setPlayerButtonsListeners(data);
+
+  fixWindowHeight();
+}
+
+function setLoader() {
+  hide('player-container');
+  hide('add-container');
+  hide('no-content-container');
+  show('loader-container');
+
+  fixWindowHeight();
+}
+
+function setNoContent() {
+  hide('loader-container');
+  hide('player-container');
+  hide('add-container');
+  show('no-content-container');
+
+  fixWindowHeight();
+}
+
+function setProgressBar(currentProgress: number, musicDuration: number) {
+  const progress = (currentProgress / musicDuration) * 100;
+
+  const progressBar = document.getElementById('progress-bar')!;
+
+  progressBar.style.width = `${progress}%`;
+}
+
+function setPlayerButtonsListeners(data: any) {
+
+  document.getElementById('previous-button')!
+    .addEventListener('click', () => ipcRenderer.send('previousButtonClicked'));
+
+  document.getElementById('next-button')!
+    .addEventListener('click', () => ipcRenderer.send('nextButtonClicked'));
+
+  document.getElementById('play-button')!
+    .addEventListener('click', () => {
+      const channel = data.isPlaying ? 'pauseButtonClicked' : 'playButtonClicked';
+      ipcRenderer.send(channel);
+    });
+
+  document.getElementById('add-button')!
+    .addEventListener('click', () => {
+      const addContainer = document.getElementById('add-container')!;
+      addContainer.innerHTML = getAddTemplate();
+
+      currentUriOfAddPage = data.uri;
+      setAddButtonsListeners();
+
+      hide('player-container');
+      show('add-container');
+      fixWindowHeight();
+    });
+
+  document.getElementById('shuffle-button')!
+    .addEventListener('click', () => {
+      const channel = data.shuffleState ? 'unshuffleButtonClicked' : 'shuffleButtonClicked';
+      ipcRenderer.send(channel);
+    });
+}
+
+function setAddButtonsListeners() {
+  document.getElementById('add-back-button')!
+    .addEventListener('click', () => {
+      hide('add-container');
+      show('player-container');
+      fixWindowHeight();
+    });
+
+  document.getElementById('add-save-button')!
+    .addEventListener('click', () => ipcRenderer.send('addToLibraryClicked', currentUriOfAddPage));
+
+  document.getElementById('add-playlist-button')!
+    .addEventListener('click', () => {
+      const playlistsContainer = document.getElementById('playlists-container')!;
+
+      if (playlistsContainer.style.display === 'none') {
+        ipcRenderer.send('addToPlaylistButtonClicked')
+      } else {
+        closePlaylistsContainer();
+      }
+    });
+}
+
+function openPlaylistsContainer(playlists: any) {
+  toggleAddPlaylistIcon();
+
+  const playlistsContainer = document.getElementById('playlists-container')!;
+  playlistsContainer.style.display = 'block';
+
+  playlists.forEach((playlist: any) => {
+    playlistsContainer.innerHTML += getPlaylistTemplate(playlist);
+  });
+
+  setPlaylistsListeners(playlists);
+  fixWindowHeight();
+}
+
+function closePlaylistsContainer() {
+  toggleAddPlaylistIcon();
+  const playlistsContainer = document.getElementById('playlists-container')!;
+
+  playlistsContainer.innerHTML = '';
+  playlistsContainer.style.display = 'none';
+
+  fixWindowHeight();
+}
+
+function setPlaylistsListeners(playlists: any) {
+  playlists.forEach((playlist: any) => {
+    const playlistContainer = document.getElementById(`playlist-${playlist.id}`)!;
+    playlistContainer.addEventListener('click', () => {
+      const data = {
+        playlistId: playlist.id,
+        uri: currentUriOfAddPage
+      };
+      ipcRenderer.send('playlistSelected', data);
+    });
+  });
+}
+
+function toggleAddPlaylistIcon() {
+  const playlistsContainer = document.getElementById('playlists-container')!;
+  const addPlaylistIcon = document.getElementById('add-playlist-icon')!;
+
+  if (playlistsContainer.style.display === 'none') {
+    addPlaylistIcon.classList.remove('fa-chevron-right');
+
+    addPlaylistIcon.classList.add('fa-chevron-down');
+  } else {
+    addPlaylistIcon.classList.remove('fa-chevron-down');
+
+    addPlaylistIcon.classList.add('fa-chevron-right');
+  }
+}
+
+/* Exports. */
+
+exports.handleMiniPlayer = handleMiniPlayer;
