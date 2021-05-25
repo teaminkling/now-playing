@@ -1,7 +1,7 @@
 {
   "name": "spotify-now-playing",
   "version": "0.7.0",
-  "description": "Spotify now playing popup for macOS menu bar",
+  "description": "A tool for macOS and Spotify to extend functionality of Spotify Desktop.",
   "main": "src/index.js",
   "scripts": {
     "start": "electron .",
@@ -12,9 +12,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/davicorreiajr/spotify-now-playing.git"
+    "url": "https://github.com/teaminkling/mac-spotify-np.git"
   },
-  "author": "davicorreiajr",
+  "author": "teaminkling",
   "license": "MIT",
   "devDependencies": {
     "electron": "^3.0.9",
