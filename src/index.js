@@ -32,7 +32,6 @@ function launchApp() {
 }
 
 function setTrayConfigs(tray) {
-  tray.setHighlightMode('never');
   tray.setIgnoreDoubleClickEvents(true);
 }
 
