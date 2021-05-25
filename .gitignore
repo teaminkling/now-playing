@@ -1,6 +1,50 @@
-node_modules
-dist
+# IDE and OS
+
+.idea/
+.vscode/
+.DS_Store
+
+# Environment
+
+dist/
+coverage/
+/target/
+
+## Python
+
+.env
+__pycache__/
+*.pyc
+
+### Django
+
+*.sqlite3
+
+## JavaScript
+
+.nuxt/
+npm-debug.log
+node_modules/
+.nyc_output
+
+## Rust
+
+**/*.rs.bk
+
+## Remove/comment this line for executables:
+
+Cargo.lock
+
+## Godot
+
+.import/
+export.cfg
+export_presets.cfg
+*.translation
+.mono/
+data_*/
+
+## Project-specific
+
 .env.json
 electron-builder.yml
-.idea/
-yarn-error.log
