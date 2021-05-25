@@ -1,7 +1,7 @@
 'use strict';
 require('../sentry');
 
-exports.get = function() {
+exports.get = function () {
   const listeners = {};
 
   function on(eventType, callback) {
@@ -11,7 +11,7 @@ exports.get = function() {
 
   function emit(eventType, data) {
     const callbacks = listeners[eventType];
-    if(!callbacks) return;
+    if (!callbacks) return;
     callbacks.forEach(callback => callback(data));
   }
 

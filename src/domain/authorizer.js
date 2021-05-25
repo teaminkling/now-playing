@@ -10,8 +10,8 @@ const { SPOTIFY_SCOPES, REDIRECT_URI, SPOTIFY_CLIENT_ID } = require('../helpers/
 
 let authorizing;
 
-exports.execute = function(parentWindow) {
-  if(authorizing) return;
+exports.execute = function (parentWindow) {
+  if (authorizing) return;
   authorizing = true;
 
   const subject = subjectFactory.get();
@@ -23,7 +23,7 @@ exports.execute = function(parentWindow) {
 
   const accessToken = localStorage.get('accessToken');
 
-  if(accessToken && areSavedScopesEnough()) {
+  if (accessToken && areSavedScopesEnough()) {
     getCurrentUser(accessToken);
   } else {
     getAuthorization();
@@ -32,7 +32,7 @@ exports.execute = function(parentWindow) {
   function getCurrentUser(token) {
     spotifyDataSource.getCurrentUser(token)
       .then(user => {
-        if(user.uri) {
+        if (user.uri) {
           localStorage.save('userUri', user.uri);
           sentryConfig.execute(user);
           authorizing = false;
@@ -45,8 +45,8 @@ exports.execute = function(parentWindow) {
 
   function handleErrorCurrentUser() {
     const refreshToken = localStorage.get('refreshToken');
-    
-    if(!refreshToken) getAuthorization();
+
+    if (!refreshToken) getAuthorization();
     getTokenFromRefreshToken(refreshToken);
   }
 
@@ -56,7 +56,7 @@ exports.execute = function(parentWindow) {
     spotifyAuthWindow.loadURL(spotifyAuthUrl);
 
     spotifyAuthWindow.once('ready-to-show', () => spotifyAuthWindow.show());
-    
+
     const webContents = spotifyAuthWindow.webContents;
     webContents.on('did-finish-load', () => {
       const url = webContents.getURL();
@@ -64,9 +64,9 @@ exports.execute = function(parentWindow) {
       const urlSearchParams = new URLSearchParams(urlQueryParams);
       const code = urlSearchParams.get('code');
 
-      if(isDomainUrlRedirectUri(url.split('?')[0]) && code) {
+      if (isDomainUrlRedirectUri(url.split('?')[0]) && code) {
         spotifyAuthWindow.destroy();
-        
+
         const authCode = code.split('#')[0];
         subject.emit('authCode', authCode);
       }
@@ -81,7 +81,7 @@ exports.execute = function(parentWindow) {
 
     spotifyDataSource.getToken(body)
       .then(json => {
-        if(json.access_token) {
+        if (json.access_token) {
           localStorage.save('accessToken', json.access_token);
           localStorage.save('refreshToken', json.refresh_token);
           localStorage.save('authorizedScopes', json.scope);
@@ -100,9 +100,9 @@ exports.execute = function(parentWindow) {
 
     spotifyDataSource.getToken(body)
       .then(json => {
-        if(json.access_token) {
+        if (json.access_token) {
           localStorage.save('accessToken', json.access_token);
-          if(json.refresh_token) localStorage.save('refreshToken', json.refresh_token);
+          if (json.refresh_token) localStorage.save('refreshToken', json.refresh_token);
           subject.emit('token', json.access_token);
         } else {
           subject.emit('errorTokenFromRefreshToken', null);
@@ -118,7 +118,7 @@ function isDomainUrlRedirectUri(domainUrl) {
 
 function areSavedScopesEnough() {
   const savedScopes = localStorage.get('authorizedScopes');
-  if(!savedScopes) return false;
+  if (!savedScopes) return false;
 
   const savedScopesArray = savedScopes.split(' ');
   const appScopesArray = SPOTIFY_SCOPES.split(' ');

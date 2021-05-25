@@ -22,38 +22,38 @@ ipcMain.on('addToLibraryClicked', (event, uri) => {
 
 let currentPlaybackURI;
 
-exports.execute = function(parentWindow, tray) {
+exports.execute = function (parentWindow, tray) {
   ipcMain.on('addToPlaylistButtonClicked', handleAddToPlaylistButtonClicked);
   ipcMain.on('playlistSelected', (event, data) => handlePlaylistSelected(data));
 
   setInterval(() => getCurrentPlayback(), UPDATE_PERIOD);
 
   let index = 0;
-  
+
   function getCurrentPlayback() {
     const accessToken = localStorage.get('accessToken');
 
     spotifyDataSource.getCurrentPlayback(accessToken)
       .then(json => {
-        if(json.item) {
+        if (json.item) {
           const mappedData = mappers.currentPlaybackToView(json);
-          if(shouldShowTrackNotification(mappedData)) {
+          if (shouldShowTrackNotification(mappedData)) {
             notifier.notify(
-              mappers.notificationData(mappedData), function(error, response, metadata) {
+              mappers.notificationData(mappedData), function (error, response, metadata) {
                 const keyExists = Object.prototype.hasOwnProperty.call(metadata, 'activationType');
-                if(keyExists && metadata['activationType'] === 'actionClicked') {
+                if (keyExists && metadata['activationType'] === 'actionClicked') {
                   spotifyDataSource.nextTrack(localStorage.get('accessToken'));
                 }
               }
             );
           }
-          if(shouldShowSongMenubar()) {
+          if (shouldShowSongMenubar()) {
             const title = `${mappedData.artistName} - ${mappedData.musicName} - ${mappedData.albumName}`;
 
-            if(title.length <= SONG_TITLE_MAX_LENGTH) {
+            if (title.length <= SONG_TITLE_MAX_LENGTH) {
               tray.setTitle(title);
             } else {
-              if(didSongChange(mappedData)) {
+              if (didSongChange(mappedData)) {
                 index = 0;
               }
 

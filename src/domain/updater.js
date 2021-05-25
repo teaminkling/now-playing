@@ -27,8 +27,8 @@ function setListenersToUpdateWindow() {
     item.setSavePath(`${app.getPath('downloads')}/${item.getFilename()}`);
     item.on('updated', () => updateWindow.webContents.send('downloadStarted'));
     item.once('done', (event, state) => {
-      if(state === 'completed') {
-        if(updateWindow) updateWindow.webContents.send('downloadCompleted');
+      if (state === 'completed') {
+        if (updateWindow) updateWindow.webContents.send('downloadCompleted');
       } else {
         errorReporter.emit('downloadAppLatestVersion', state);
       }
@@ -36,13 +36,13 @@ function setListenersToUpdateWindow() {
   });
 }
 
-exports.execute = function(parentWindow) {
+exports.execute = function (parentWindow) {
   githubDatasource.getLatestVersion()
     .then(data => {
-      if(!isAppUpdated(data.version)) {
+      if (!isAppUpdated(data.version)) {
         dmgDownloadUrl = data.dmgDownloadUrl;
 
-        if(!updateWindow) {
+        if (!updateWindow) {
           createUpdateWindow(parentWindow);
           setListenersToUpdateWindow();
         }

@@ -1,7 +1,7 @@
 'use strict';
 require('../sentry');
 
-exports.currentPlaybackToView = function(data) {
+exports.currentPlaybackToView = function (data) {
   const albumImage = data.item.album.images[0];
   const albumImageSrc = albumImage ? albumImage.url : '';
   const artistName = data.item.artists.map(artist => artist.name).join(', ');
@@ -20,15 +20,15 @@ exports.currentPlaybackToView = function(data) {
   };
 };
 
-exports.playlistsToView = function(data) {
-  if(!Array.isArray(data)) return;
+exports.playlistsToView = function (data) {
+  if (!Array.isArray(data)) return;
   return data.map(item => ({
     name: item.name,
     id: item.id
   }));
 };
 
-exports.notificationData = function(mappedData) {
+exports.notificationData = function (mappedData) {
   return {
     title: mappedData.musicName,
     subtitle: mappedData.artistName,
@@ -38,6 +38,6 @@ exports.notificationData = function(mappedData) {
     remove: 'ALL',
     sender: 'com.spotify.client',
     timeout: '5',
-    actions: 'Next Song' 
+    actions: 'Next Song'
   };
 };

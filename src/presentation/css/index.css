@@ -2,197 +2,201 @@
 @import url('https://fonts.googleapis.com/css?family=Montserrat:500,700');
 
 html {
-  font-family: 'Montserrat', sans-serif;
-  -webkit-text-size-adjust: 100%;
+    font-family: 'Montserrat', sans-serif;
+    -webkit-text-size-adjust: 100%;
 }
 
 body {
-  background-color: #000;
-  margin: 0;
-  padding: var(--space-xl);
+    background-color: #000;
+    margin: 0;
+    padding: var(--space-xl);
 }
 
 h1 {
-  color: var(--color-primary);
-  text-align: center;
-  font-size: var(--font-size-xl);
+    color: var(--color-primary);
+    text-align: center;
+    font-size: var(--font-size-xl);
 }
 
 p {
-  margin: 0;
-  color: var(--color-primary);
-  font-size: var(--font-size-md);
-  font-weight: 500;
-  text-align: center;
+    margin: 0;
+    color: var(--color-primary);
+    font-size: var(--font-size-md);
+    font-weight: 500;
+    text-align: center;
 }
 
 a {
-  text-decoration: underline;
-  cursor: pointer;
+    text-decoration: underline;
+    cursor: pointer;
 }
 
 a:hover {
-  font-weight: 700;
+    font-weight: 700;
 }
 
 .spacement-bottom-sm {
-  margin-bottom: var(--space-sm);
+    margin-bottom: var(--space-sm);
 }
 
 .spacement-bottom-md {
-  margin-bottom: var(--space-md);
+    margin-bottom: var(--space-md);
 }
 
 .spacement-bottom-lg {
-  margin-bottom: var(--space-lg);
+    margin-bottom: var(--space-lg);
 }
 
 .spacement-bottom-xl {
-  margin-bottom: var(--space-xl);
+    margin-bottom: var(--space-xl);
 }
 
 .spacement-left-lg {
-  margin-left: var(--space-lg);
+    margin-left: var(--space-lg);
 }
 
 .spacement-top-md {
-  margin-top: var(--space-md);
+    margin-top: var(--space-md);
 }
 
 .text-color-secondary {
-  color: var(--color-secondary) !important;
+    color: var(--color-secondary) !important;
 }
 
 .text-align-left {
-  text-align: left;
+    text-align: left;
 }
 
 .caption {
-  font-size: var(--font-size-sm);
+    font-size: var(--font-size-sm);
 }
 
 .music-name {
-  font-weight: 700;
-  font-size: var(--font-size-lg);
+    font-weight: 700;
+    font-size: var(--font-size-lg);
 }
 
 .album-name {
-  color: var(--color-secondary);
+    color: var(--color-secondary);
 }
 
 .album-cover {
-  min-height: calc(var(--WINDOW-WIDTH) - 2 * var(--space-xl));
-  width: 100%;
+    min-height: calc(var(--WINDOW-WIDTH) - 2 * var(--space-xl));
+    width: 100%;
 }
 
 .loader {
-  position: absolute;
-  left: calc(var(--WINDOW-WIDTH)/2 - 30px);
-  margin-top: var(--space-xl);
-  border: 4px solid var(--color-secondary);
-  border-radius: 50%;
-  border-top: 4px solid var(--spotify-green);
-  width: 60px;
-  height: 60px;
-  animation: spin 2s linear infinite;
+    position: absolute;
+    left: calc(var(--WINDOW-WIDTH) / 2 - 30px);
+    margin-top: var(--space-xl);
+    border: 4px solid var(--color-secondary);
+    border-radius: 50%;
+    border-top: 4px solid var(--spotify-green);
+    width: 60px;
+    height: 60px;
+    animation: spin 2s linear infinite;
 }
 
 .progress-bar-container {
-  height: 2px;
-  border-radius: 4px;
-  background-color: var(--color-secondary);
+    height: 2px;
+    border-radius: 4px;
+    background-color: var(--color-secondary);
 }
 
 .progress-bar {
-  height: 100%;
-  background-color: var(--color-primary);
+    height: 100%;
+    background-color: var(--color-primary);
 }
 
 .player-controls {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .play-container {
-  cursor: pointer;
-  border: 2px solid var(--color-primary);
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-left: var(--space-md);
-  margin-right: var(--space-md);
+    cursor: pointer;
+    border: 2px solid var(--color-primary);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: var(--space-md);
+    margin-right: var(--space-md);
 }
 
 .play-icon {
-  color: var(--color-primary);
-  font-size: var(--font-size-lg);
-  margin-left: 2px;
+    color: var(--color-primary);
+    font-size: var(--font-size-lg);
+    margin-left: 2px;
 }
 
 .pause-icon {
-  color: var(--color-primary);
-  font-size: var(--font-size-lg);
+    color: var(--color-primary);
+    font-size: var(--font-size-lg);
 }
 
 .control-icon-container, .random-icon-container, .add-icon-container {
-  cursor: pointer;
-  width: 30px;
-  height: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .random-icon-container {
-  position: absolute;
-  left: 0;
+    position: absolute;
+    left: 0;
 }
 
 .add-icon-container {
-  position: absolute;
-  right: 0;
+    position: absolute;
+    right: 0;
 }
 
 .control-icon, .random-icon {
-  color: var(--color-primary);
-  font-size: var(--font-size-md);
+    color: var(--color-primary);
+    font-size: var(--font-size-md);
 }
 
 .random-icon--active {
-  color: var(--spotify-green);
+    color: var(--spotify-green);
 }
 
 .random-icon--inactive {
-  color: var(--color-primary);
+    color: var(--color-primary);
 }
 
 .add-option-container {
-  cursor: pointer;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
+    cursor: pointer;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
 }
 
-.add-option-container:hover,  .add-option-container p:hover{
-  font-weight: 700 !important;
+.add-option-container:hover, .add-option-container p:hover {
+    font-weight: 700 !important;
 }
 
 .playlists-container {
-  max-height: var(--MAX-HEIGHT-PLAYLISTS-CONTAINER);
-  overflow: scroll;
+    max-height: var(--MAX-HEIGHT-PLAYLISTS-CONTAINER);
+    overflow: scroll;
 }
 
 .playlists-container p:hover {
-  cursor: pointer;
-  font-weight: 700 !important;
+    cursor: pointer;
+    font-weight: 700 !important;
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }

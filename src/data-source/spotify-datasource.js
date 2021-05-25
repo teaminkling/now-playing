@@ -7,7 +7,7 @@ const localStorage = require('./local-storage');
 const SPOTIFY_CLIENT_ID = spotifyCodes.SPOTIFY_CLIENT_ID;
 const SPOTIFY_CLIENT_SECRET = spotifyCodes.SPOTIFY_CLIENT_SECRET;
 
-exports.getCurrentPlayback = function(accessToken) {
+exports.getCurrentPlayback = function (accessToken) {
   return fetch('https://api.spotify.com/v1/me/player', {
     method: 'GET',
     headers: { 'Authorization': `Bearer ${accessToken}` }
@@ -15,7 +15,7 @@ exports.getCurrentPlayback = function(accessToken) {
     .then(res => res.json());
 };
 
-exports.getToken = function(body) {
+exports.getToken = function (body) {
   body.append('client_id', SPOTIFY_CLIENT_ID);
   body.append('client_secret', SPOTIFY_CLIENT_SECRET);
 
@@ -27,42 +27,42 @@ exports.getToken = function(body) {
     .then(res => res.json());
 };
 
-exports.shuffle = function(accessToken, state) {  
+exports.shuffle = function (accessToken, state) {
   return fetch(`https://api.spotify.com/v1/me/player/shuffle?state=${state}`, {
     method: 'PUT',
     headers: { 'Authorization': `Bearer ${accessToken}` }
   });
 };
 
-exports.nextTrack = function(accessToken) {
+exports.nextTrack = function (accessToken) {
   return fetch('https://api.spotify.com/v1/me/player/next', {
     method: 'POST',
     headers: { 'Authorization': `Bearer ${accessToken}` }
   });
 };
 
-exports.previousTrack = function(accessToken) {
+exports.previousTrack = function (accessToken) {
   return fetch('https://api.spotify.com/v1/me/player/previous', {
     method: 'POST',
     headers: { 'Authorization': `Bearer ${accessToken}` }
   });
 };
 
-exports.play = function(accessToken) {
+exports.play = function (accessToken) {
   return fetch('https://api.spotify.com/v1/me/player/play', {
     method: 'PUT',
     headers: { 'Authorization': `Bearer ${accessToken}` }
   });
 };
 
-exports.pause = function(accessToken) {
+exports.pause = function (accessToken) {
   return fetch('https://api.spotify.com/v1/me/player/pause', {
     method: 'PUT',
     headers: { 'Authorization': `Bearer ${accessToken}` }
   });
 };
 
-exports.getPlaylists = function(accessToken) {
+exports.getPlaylists = function (accessToken) {
   const limit = 50;
   const fetchOptions = {
     method: 'GET',
@@ -72,8 +72,8 @@ exports.getPlaylists = function(accessToken) {
   return fetch(`https://api.spotify.com/v1/me/playlists?limit=${limit}`, fetchOptions)
     .then(res => res.json())
     .then(json => {
-      const numberOfRequests = Math.ceil(json.total/limit);
-      if(numberOfRequests === 1) return json.items;
+      const numberOfRequests = Math.ceil(json.total / limit);
+      if (numberOfRequests === 1) return json.items;
 
       const endpoints = [...Array(numberOfRequests)].map((_, request) => `https://api.spotify.com/v1/me/playlists?offset=${limit * request}&limit=${limit}`);
       return Promise.all(endpoints.map(endpoint => fetch(endpoint, fetchOptions).then(res => res.json())))
@@ -82,7 +82,7 @@ exports.getPlaylists = function(accessToken) {
     .then(data => data.filter(playlist => playlist.collaborative || isPlaylistFromCurrentUser(playlist)));
 };
 
-exports.addTrackToPlaylist = function(accessToken, playlistId, uri) {
+exports.addTrackToPlaylist = function (accessToken, playlistId, uri) {
   return fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks?uris=${encodeURIComponent(uri)}`, {
     method: 'POST',
     headers: { 'Authorization': `Bearer ${accessToken}` }
@@ -90,7 +90,7 @@ exports.addTrackToPlaylist = function(accessToken, playlistId, uri) {
     .then(res => res.json());
 };
 
-exports.addTrackToLibrary = function(accessToken, uri) {
+exports.addTrackToLibrary = function (accessToken, uri) {
   const id = uri.split(':').pop();
   return fetch(`https://api.spotify.com/v1/me/tracks?ids=${id}`, {
     method: 'PUT',
@@ -98,7 +98,7 @@ exports.addTrackToLibrary = function(accessToken, uri) {
   });
 };
 
-exports.getCurrentUser = function(accessToken) {
+exports.getCurrentUser = function (accessToken) {
   return fetch('https://api.spotify.com/v1/me', {
     method: 'GET',
     headers: { 'Authorization': `Bearer ${accessToken}` }

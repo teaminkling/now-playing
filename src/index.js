@@ -40,7 +40,7 @@ function setTrayListeners(tray) {
   tray.on('click', (event, bounds) => {
     const windowWidth = window.getSize()[0];
     const trayWidth = bounds.width;
-    const x = Math.round(bounds.x - windowWidth/2 + trayWidth/2);
+    const x = Math.round(bounds.x - windowWidth / 2 + trayWidth / 2);
     const y = bounds.y;
     window.setPosition(x, y);
     window.isVisible() ? hideAllWindows() : showAllWindows();
@@ -54,7 +54,7 @@ function hideAllWindows() {
 function showAllWindows() {
   BrowserWindow.getAllWindows().forEach(win => {
     win.show();
-    if(win.id !== window.id) win.center();
+    if (win.id !== window.id) win.center();
   });
 }
 
@@ -83,7 +83,7 @@ function setWindowListeners(window) {
 }
 
 function manageTrayRightClick(tray) {
-  const openAtLogin = app.getLoginItemSettings().openAtLogin; 
+  const openAtLogin = app.getLoginItemSettings().openAtLogin;
   const activateNotifications = localStorage.get('activateNotifications');
   const songMenubar = localStorage.get('songMenubar');
   window.hide();
@@ -107,18 +107,20 @@ function manageTrayRightClick(tray) {
       type: 'separator'
     },
     {
-      label: 'Activate Notifications',  
+      label: 'Activate Notifications',
       type: 'checkbox',
       checked: activateNotifications,
       click: () => localStorage.save('activateNotifications', !localStorage.get('activateNotifications'))
     },
     {
-      label: 'Show song in menu bar',  
+      label: 'Show song in menu bar',
       type: 'checkbox',
       checked: songMenubar,
-      click: function() {
+      click: function () {
         localStorage.save('songMenubar', !songMenubar);
-        if(songMenubar) tray.setTitle('');
+        if (songMenubar) {
+          tray.setTitle('');
+        }
       }
     },
     {
@@ -126,7 +128,7 @@ function manageTrayRightClick(tray) {
     },
     {
       label: 'Quit',
-      click: function() {
+      click: function () {
         window.setClosable(true);
         app.quit();
       }
@@ -139,6 +141,8 @@ function manageTrayRightClick(tray) {
 
 ipcMain.on('fixHeight', (event, height) => window.setSize(MAIN_WINDOW_WIDTH, height, true));
 
-if(app.dock) app.dock.hide();
+if (app.dock) {
+  app.dock.hide();
+}
 
 app.on('ready', launchApp);

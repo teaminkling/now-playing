@@ -1,7 +1,13 @@
 'use strict';
 require('../sentry');
 const { BrowserWindow, app } = require('electron');
-const { APP_NAME, MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT, UPDATER_WINDOW_HEIGHT, UPDATER_WINDOW_WIDTH } = require('./constants');
+const {
+  APP_NAME,
+  MAIN_WINDOW_WIDTH,
+  MAIN_WINDOW_HEIGHT,
+  UPDATER_WINDOW_HEIGHT,
+  UPDATER_WINDOW_WIDTH
+} = require('./constants');
 
 function getAuth(options) {
   return new BrowserWindow({
@@ -48,7 +54,7 @@ function getUpdater(options) {
   });
 }
 
-exports.get = function(type, options) {
+exports.get = function (type, options) {
   const windows = {
     'auth': getAuth,
     'main': getMain,

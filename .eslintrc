@@ -31,22 +31,7 @@
     "indent": ["error", 2],
     "jsx-quotes": "error",
     "key-spacing": "error",
-    "keyword-spacing": ["error", {
-      "overrides": {
-        "if": {
-          "after": false
-        },
-        "function": {
-          "after": false
-        },
-        "for": {
-          "after": false
-        },
-        "while": {
-          "after": false
-        }
-      }
-    }],
+    "keyword-spacing": ["error"],
     "linebreak-style": ["error", "unix"],
     "lines-between-class-members": "error",
     "max-depth": "error",

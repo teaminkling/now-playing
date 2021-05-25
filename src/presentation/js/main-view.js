@@ -71,7 +71,7 @@ function fixWindowHeight() {
 }
 
 function setPlayer(data) {
-  if(document.getElementById('add-container').style.display === 'block') return;
+  if (document.getElementById('add-container').style.display === 'block') return;
 
   hide('loader-container');
   hide('no-content-container');
@@ -107,7 +107,7 @@ function setProgressBar(currentProgress, musicDuration) {
 }
 
 function setPlayerButtonsListeners(data) {
-  
+
   document.getElementById('previous-button')
     .addEventListener('click', () => ipcRenderer.send('previousButtonClicked'));
 
@@ -124,7 +124,7 @@ function setPlayerButtonsListeners(data) {
     .addEventListener('click', () => {
       const addContainer = document.getElementById('add-container');
       addContainer.innerHTML = getAddTemplate();
-      
+
       currentUriOfAddPage = data.uri;
       setAddButtonsListeners();
 
@@ -147,7 +147,7 @@ function setAddButtonsListeners() {
       show('player-container');
       fixWindowHeight();
     });
-  
+
   document.getElementById('add-save-button')
     .addEventListener('click', () => ipcRenderer.send('addToLibraryClicked', currentUriOfAddPage));
 
@@ -195,8 +195,8 @@ function setPlaylistsListeners(playlists) {
 function toggleAddPlaylistIcon() {
   const playlistsContainer = document.getElementById('playlists-container');
   const addPlaylistIcon = document.getElementById('add-playlist-icon');
-  
-  if(playlistsContainer.style.display === 'none') {
+
+  if (playlistsContainer.style.display === 'none') {
     addPlaylistIcon.classList.remove('fa-chevron-right');
     addPlaylistIcon.classList.add('fa-chevron-down');
   } else {
