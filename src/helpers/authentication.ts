@@ -5,7 +5,7 @@ import { BrowserWindow } from "electron";
 import { get, set } from '../data/local-storage';
 import { getCurrentUser, getToken } from '../data/spotify-api';
 
-import { SPOTIFY_REDIRECT_URI, SPOTIFY_CLIENT_ID, SPOTIFY_SCOPES } from '../constants';
+import { SPOTIFY_CLIENT_ID, SPOTIFY_REDIRECT_URI, SPOTIFY_SCOPES } from '../constants';
 
 /**
  * The base URL for the Spotify account endpoint.
@@ -15,171 +15,171 @@ const SPOTIFY_ACCOUNT_BASE_URL: string = "https://accounts.spotify.com/en/author
 let authorizing: boolean;
 
 export function handleAuthentication(miniPlayer: BrowserWindow) {
-    if (authorizing) {
-        return;
-    }
+  if (authorizing) {
+    return;
+  }
 
-    authorizing = true;
+  authorizing = true;
 
-    const subject = prepareSubjects();
+  const subject = prepareSubjects();
 
-    subject.on('errorCurrentUser', handleErrorCurrentUser);
-    subject.on('authCode', getTokenFromAuthCode);
-    subject.on('token', retrieveCurrentUser);
-    subject.on('errorTokenFromRefreshToken', getAuthorization);
-    subject.on('errorTokenFromAuthCode', getAuthorization);
+  subject.on('errorCurrentUser', handleErrorCurrentUser);
+  subject.on('authCode', getTokenFromAuthCode);
+  subject.on('token', retrieveCurrentUser);
+  subject.on('errorTokenFromRefreshToken', getAuthorization);
+  subject.on('errorTokenFromAuthCode', getAuthorization);
 
-    const accessToken: string = get('accessToken');
+  const accessToken: string = get('accessToken');
 
-    if (accessToken && areSavedScopesEnough()) {
-        retrieveCurrentUser(accessToken);
-    } else {
-        getAuthorization();
-    }
+  if (accessToken && areSavedScopesEnough()) {
+    retrieveCurrentUser(accessToken);
+  } else {
+    getAuthorization();
+  }
 
-    function retrieveCurrentUser(token: any) {
-        getCurrentUser(token)
-            .then((user: any) => {
-                if (user.uri) {
-                    set('userUri', user.uri);
-                    authorizing = false;
-                } else {
-                    subject.emit('errorCurrentUser', null);
-                }
-            });
-    }
-
-    function handleErrorCurrentUser() {
-        const refreshToken = get('refreshToken');
-
-        if (!refreshToken) {
-            getAuthorization();
+  function retrieveCurrentUser(token: any) {
+    getCurrentUser(token)
+      .then((user: any) => {
+        if (user.uri) {
+          set('userUri', user.uri);
+          authorizing = false;
+        } else {
+          subject.emit('errorCurrentUser', null);
         }
+      });
+  }
 
-        getTokenFromRefreshToken(refreshToken);
+  function handleErrorCurrentUser() {
+    const refreshToken = get('refreshToken');
+
+    if (!refreshToken) {
+      getAuthorization();
     }
 
-    function getAuthorization() {
-        const spotifyAuthWindow = new BrowserWindow({
-            parent: miniPlayer,
-            modal: true,
-            show: false,
-            webPreferences: {
-                nodeIntegration: false
-            }
-        });
+    getTokenFromRefreshToken(refreshToken);
+  }
 
-        /* Form the auth URL. */
+  function getAuthorization() {
+    const spotifyAuthWindow = new BrowserWindow({
+      parent: miniPlayer,
+      modal: true,
+      show: false,
+      webPreferences: {
+        nodeIntegration: false
+      }
+    });
 
-        const clientIdParam: string = `client_id=${SPOTIFY_CLIENT_ID}`;
-        const responseTypeParam: string = `response_type=code`;
-        const redirectUriParam: string = `redirect_uri=${encodeURIComponent(SPOTIFY_REDIRECT_URI)}`;
-        const scopeStringParam: string = `scope=${encodeURI(SPOTIFY_SCOPES.join(" "))}`;
-        const spotifyAuthUrlParams: string = (
-            `?${clientIdParam}&${responseTypeParam}&${redirectUriParam}&${scopeStringParam}`
-        );
+    /* Form the auth URL. */
 
-        const spotifyAuthUrl: string = `${SPOTIFY_ACCOUNT_BASE_URL}${spotifyAuthUrlParams}`;
+    const clientIdParam: string = `client_id=${SPOTIFY_CLIENT_ID}`;
+    const responseTypeParam: string = `response_type=code`;
+    const redirectUriParam: string = `redirect_uri=${encodeURIComponent(SPOTIFY_REDIRECT_URI)}`;
+    const scopeStringParam: string = `scope=${encodeURI(SPOTIFY_SCOPES.join(" "))}`;
+    const spotifyAuthUrlParams: string = (
+      `?${clientIdParam}&${responseTypeParam}&${redirectUriParam}&${scopeStringParam}`
+    );
 
-        spotifyAuthWindow.loadURL(spotifyAuthUrl).then(null);
+    const spotifyAuthUrl: string = `${SPOTIFY_ACCOUNT_BASE_URL}${spotifyAuthUrlParams}`;
 
-        spotifyAuthWindow.once('ready-to-show', () => spotifyAuthWindow.show());
+    spotifyAuthWindow.loadURL(spotifyAuthUrl).then(null);
 
-        const webContents = spotifyAuthWindow.webContents;
+    spotifyAuthWindow.once('ready-to-show', () => spotifyAuthWindow.show());
 
-        webContents.on('did-finish-load', () => {
-            const url = webContents.getURL();
-            const urlQueryParams = url.split('?')[1] || '';
-            const urlSearchParams = new URLSearchParams(urlQueryParams);
-            const code = urlSearchParams.get('code');
+    const webContents = spotifyAuthWindow.webContents;
 
-            if (isDomainUrlRedirectUri(url.split('?')[0]) && code) {
-                spotifyAuthWindow.destroy();
+    webContents.on('did-finish-load', () => {
+      const url = webContents.getURL();
+      const urlQueryParams = url.split('?')[1] || '';
+      const urlSearchParams = new URLSearchParams(urlQueryParams);
+      const code = urlSearchParams.get('code');
 
-                const authCode = code.split('#')[0];
-                subject.emit('authCode', authCode);
-            }
-        });
-    }
+      if (isDomainUrlRedirectUri(url.split('?')[0]) && code) {
+        spotifyAuthWindow.destroy();
 
-    function getTokenFromAuthCode(authCode: string) {
-        const body = new URLSearchParams();
-        body.append('grant_type', 'authorization_code');
-        body.append('code', authCode);
-        body.append('redirect_uri', SPOTIFY_REDIRECT_URI);
+        const authCode = code.split('#')[0];
+        subject.emit('authCode', authCode);
+      }
+    });
+  }
 
-        getToken(body)
-            .then((json: any) => {
-                if (json.access_token) {
-                    set('accessToken', json.access_token);
-                    set('refreshToken', json.refresh_token);
-                    set('authorizedScopes', json.scope);
-                    subject.emit('token', json.access_token);
-                } else {
-                    subject.emit('errorTokenFromAuthCode', null);
-                }
-            });
-    }
+  function getTokenFromAuthCode(authCode: string) {
+    const body = new URLSearchParams();
+    body.append('grant_type', 'authorization_code');
+    body.append('code', authCode);
+    body.append('redirect_uri', SPOTIFY_REDIRECT_URI);
 
-    function getTokenFromRefreshToken(refreshToken: string) {
-        const body = new URLSearchParams();
-        body.append('grant_type', 'refresh_token');
-        body.append('refresh_token', refreshToken);
+    getToken(body)
+      .then((json: any) => {
+        if (json.access_token) {
+          set('accessToken', json.access_token);
+          set('refreshToken', json.refresh_token);
+          set('authorizedScopes', json.scope);
+          subject.emit('token', json.access_token);
+        } else {
+          subject.emit('errorTokenFromAuthCode', null);
+        }
+      });
+  }
 
-        getToken(body)
-            .then((json: any) => {
-                if (json.access_token) {
-                    set('accessToken', json.access_token);
-                    if (json.refresh_token) {
-                        set('refreshToken', json.refresh_token)
-                    }
-                    subject.emit('token', json.access_token);
-                } else {
-                    subject.emit('errorTokenFromRefreshToken', null);
-                }
-            });
-    }
+  function getTokenFromRefreshToken(refreshToken: string) {
+    const body = new URLSearchParams();
+    body.append('grant_type', 'refresh_token');
+    body.append('refresh_token', refreshToken);
+
+    getToken(body)
+      .then((json: any) => {
+        if (json.access_token) {
+          set('accessToken', json.access_token);
+          if (json.refresh_token) {
+            set('refreshToken', json.refresh_token)
+          }
+          subject.emit('token', json.access_token);
+        } else {
+          subject.emit('errorTokenFromRefreshToken', null);
+        }
+      });
+  }
 }
 
 function prepareSubjects() {
-    const listeners: {[key: string]: any} = {};
+  const listeners: { [key: string]: any } = {};
 
-    function on(eventType: string, callback: CallableFunction) {
-        listeners[eventType] = listeners[eventType] || [];
-        listeners[eventType].push(callback);
+  function on(eventType: string, callback: CallableFunction) {
+    listeners[eventType] = listeners[eventType] || [];
+    listeners[eventType].push(callback);
+  }
+
+  function emit(eventType: string, data: any) {
+    const callbacks = listeners[eventType];
+    if (!callbacks) {
+      return;
     }
 
-    function emit(eventType: string, data: any) {
-        const callbacks = listeners[eventType];
-        if (!callbacks) {
-            return;
-        }
+    callbacks.forEach((callback: CallableFunction) => callback(data));
+  }
 
-        callbacks.forEach((callback: CallableFunction) => callback(data));
-    }
-
-    return {
-        on,
-        emit
-    };
+  return {
+    on,
+    emit
+  };
 }
 
 function isDomainUrlRedirectUri(domainUrl: string) {
-    return domainUrl === SPOTIFY_REDIRECT_URI;
+  return domainUrl === SPOTIFY_REDIRECT_URI;
 }
 
 function areSavedScopesEnough() {
-    const savedScopes = get('authorizedScopes');
-    if (!savedScopes) {
-        return false;
-    }
+  const savedScopes = get('authorizedScopes');
+  if (!savedScopes) {
+    return false;
+  }
 
-    const savedScopesArray: string[] = savedScopes.split(" ");
+  const savedScopesArray: string[] = savedScopes.split(" ");
 
-    return SPOTIFY_SCOPES.reduce(
-        (result: boolean, scope: string) => {
-            return result && savedScopesArray.includes(scope);
-        },
-        true,
-    );
+  return SPOTIFY_SCOPES.reduce(
+    (result: boolean, scope: string) => {
+      return result && savedScopesArray.includes(scope);
+    },
+    true,
+  );
 }

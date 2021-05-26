@@ -6,7 +6,7 @@ import { app } from 'electron';
 
 import { file } from 'nconf';
 
-const nconf = file({ file: `${app.getPath('userData')}/local-storage.json` });
+const nconf = file({file: `${app.getPath('userData')}/local-storage.json`});
 
 /**
  * Mutate a variable in local storage.

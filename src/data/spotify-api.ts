@@ -65,27 +65,27 @@ export function getPlaylists(accessToken: string) {
   };
 
   return fetch(`${SPOTIFY_API_BASE_URL}/me/playlists?limit=${limit}`, fetchOptions)
-      .then(res => res.json())
-      .then(json => {
-        const numberOfRequests = Math.ceil(json.total / limit);
-        if (numberOfRequests === 1) {
-            return json.items;
-        }
+    .then(res => res.json())
+    .then(json => {
+      const numberOfRequests = Math.ceil(json.total / limit);
+      if (numberOfRequests === 1) {
+        return json.items;
+      }
 
-        const endpoints: string[] = [...Array(numberOfRequests)].map(
-            (_, request) => `${SPOTIFY_API_BASE_URL}/me/playlists?offset=${limit * request}&limit=${limit}`
-        );
+      const endpoints: string[] = [...Array(numberOfRequests)].map(
+        (_, request) => `${SPOTIFY_API_BASE_URL}/me/playlists?offset=${limit * request}&limit=${limit}`
+      );
 
-        return Promise.all(
-            endpoints.map(
-                /* Make each request then map to a JSON response. */
+      return Promise.all(
+        endpoints.map(
+          /* Make each request then map to a JSON response. */
 
-                endpoint => fetch(endpoint, fetchOptions).then(res => res.json())
-            )
-        ).then(data => data.map(res => res.items).reduce((result, item) => result.concat(item), []));
-      }).then(data => data.filter((playlist: any) => {
-        playlist.collaborative || isPlaylistFromCurrentUser(playlist);
-      }));
+          endpoint => fetch(endpoint, fetchOptions).then(res => res.json())
+        )
+      ).then(data => data.map(res => res.items).reduce((result, item) => result.concat(item), []));
+    }).then(data => data.filter((playlist: any) => {
+      playlist.collaborative || isPlaylistFromCurrentUser(playlist);
+    }));
 }
 
 export function addTrackToPlaylist(accessToken: string, playlistId: string, uri: string) {
@@ -112,7 +112,7 @@ export function addTrackToLibrary(accessToken: string, uri: string) {
  */
 
 export function getCurrentUser(accessToken: string) {
-  return fetch('${SPOTIFY_API_BASE_URL}', {
+  return fetch(`${SPOTIFY_API_BASE_URL}/me`, {
     method: 'GET',
     headers: {'Authorization': `Bearer ${accessToken}`}
   }).then(res => res.json());

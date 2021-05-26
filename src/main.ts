@@ -1,44 +1,60 @@
 /**
  * This is the entrypoint for the Electron app.
- *
- * This software follows an "all roads lead to Rome" philosophy: all logic and live code can be traced to this file.
- * New contributors will want to start here.
- *
  */
 
-import { app } from 'electron';
+import { app, ipcMain, session } from 'electron';
 
 import { handleMiniPlayer } from './components/mini-player';
 import { initTray } from './components/tray';
 
 import { handleAuthentication } from './helpers/authentication';
 import { handleMediaPlayback } from './helpers/media-player';
+import { MAIN_WINDOW_WIDTH } from "./constants";
 
 /* Don't display the app in the macOS dock. */
 
 if (app.dock) {
-    app.dock.hide();
+  app.dock.hide();
 }
 
 /* Finally, run the app. */
 
 app.on(
-    'ready',
-    () => {
-        /* The mini-player is a web component that exists as a drop-down underneath the tray. */
+  'ready',
+  () => {
+    /* Add content security policy header. */
 
-        let miniPlayer = handleMiniPlayer();
+    session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
+      callback({
+        responseHeaders: {
+          ...details.responseHeaders,
+          'Content-Security-Policy': [
+            "default-src 'self';" +
+            "style-src 'self' https://fonts.googleapis.com https://use.fontawesome.com;" +
+            "font-src https://fonts.gstatic.com https://use.fontawesome.com"
+          ]
+        }
+      })
+    });
 
-        /* The (system) tray is the area of the screen with icons such as the WiFi icon. */
+    /* The mini-player is a web component that exists as a drop-down underneath the tray. */
 
-        let tray = initTray(miniPlayer);
+    let miniPlayer = handleMiniPlayer();
 
-        /* Authenticate, if required. */
+    ipcMain.on('fixHeight', (_event, height) => {
+      miniPlayer.setSize(MAIN_WINDOW_WIDTH, height, true);
+    });
 
-        handleAuthentication(miniPlayer);
+    /* The (system) tray is the area of the screen with icons such as the WiFi icon. */
 
-        /* Handle the control of the Spotify service from the software. */
+    let tray = initTray(miniPlayer);
 
-        handleMediaPlayback(miniPlayer, tray);
-    }
+    /* Authenticate, if required. */
+
+    handleAuthentication(miniPlayer);
+
+    /* Handle the control of the Spotify service from the software. */
+
+    handleMediaPlayback(miniPlayer, tray);
+  }
 );

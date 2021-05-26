@@ -19,7 +19,7 @@ import { APP_NAME, FEEDBACK_LINK } from '../constants';
 export function initTray(miniPlayer: BrowserWindow) {
   /* Load the tray into the global scope. */
 
-  const tray = new Tray(path.join(__dirname, 'img/iconTemplate.png'));
+  const tray = new Tray(path.join(__dirname, '../img/iconTemplate.png'));
 
   /* Configure the tray. */
 
@@ -100,7 +100,7 @@ function manageTrayRightClick(miniPlayer: BrowserWindow, tray: Tray) {
       label: 'Open at Login',
       type: 'checkbox',
       checked: openAtLogin,
-      click: () => app.setLoginItemSettings({ openAtLogin: !openAtLogin })
+      click: () => app.setLoginItemSettings({openAtLogin: !openAtLogin})
     },
     {
       label: 'Submit Feedback',

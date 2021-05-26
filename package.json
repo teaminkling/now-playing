@@ -4,6 +4,9 @@
   "description": "A tool for macOS and Spotify to extend functionality of Spotify Desktop.",
   "main": "dist/main.js",
   "scripts": {
+    "build": "tsc",
+    "copy": "cp -r src/css/ dist/css/ && cp -r src/img dist/img",
+    "clean": "rm -rf dist/*",
     "start": "electron .",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
@@ -19,6 +22,7 @@
   "devDependencies": {
     "@types/nconf": "^0.10.0",
     "@types/node-notifier": "^8.0.0",
+    "browserify": "^17.0.0",
     "dotenv": "^10.0.0",
     "electron": "^13.0.0",
     "electron-builder": "^20.36.2",

@@ -44,62 +44,62 @@ export function handleMediaPlayback(parentWindow: BrowserWindow, tray: Tray) {
   let index = 0;
 
   function retrieveCurrentPlayback() {
-    const accessToken: string = localStorage.get('accessToken');
+    const accessToken: string = get('accessToken');
 
     getCurrentPlayback(accessToken)
-        .then(json => {
-          if (json.item) {
-            const mappedData = currentPlaybackToView(json);
-            if (shouldShowTrackNotification(mappedData)) {
-              notifier.notify(
-                  {
-                    title: mappedData.musicName,
-                    subtitle: mappedData.artistName,
-                    message: mappedData.albumName,
-                    contentImage: mappedData.albumImageSrc,
-                    timeout: 5,
-                    actions: 'Next Song'
-                  },
-                  (
-                      _error: Error | null,
-                      _response: string,
-                      metadata: NotificationMetadata | undefined
-                  ) => {
-                    const keyExists: boolean = Object.prototype.hasOwnProperty.call(
-                        metadata, 'activationType'
-                    );
+      .then(json => {
+        if (json.item) {
+          const mappedData = currentPlaybackToView(json);
+          if (shouldShowTrackNotification(mappedData)) {
+            notifier.notify(
+              {
+                title: mappedData.musicName,
+                subtitle: mappedData.artistName,
+                message: mappedData.albumName,
+                contentImage: mappedData.albumImageSrc,
+                timeout: 5,
+                actions: 'Next Song'
+              },
+              (
+                _error: Error | null,
+                _response: string,
+                metadata: NotificationMetadata | undefined
+              ) => {
+                const keyExists: boolean = Object.prototype.hasOwnProperty.call(
+                  metadata, 'activationType'
+                );
 
-                    if (keyExists && metadata!['activationType'] === 'actionClicked') {
-                      nextTrack(localStorage.get('accessToken')).then(null);
-                    }
-                  }
-              );
-            }
-            if (shouldShowSongMenubar()) {
-              const title = `${mappedData.artistName} - ${mappedData.musicName} - ${mappedData.albumName}`;
-
-              if (title.length <= SONG_TITLE_MAX_LENGTH) {
-                tray.setTitle(title);
-              } else {
-                if (didSongChange(mappedData)) {
-                  index = 0;
+                if (keyExists && metadata!['activationType'] === 'actionClicked') {
+                  nextTrack(get('accessToken')).then(null);
                 }
-
-                tray.setTitle(title.substring(index, index + (SONG_TITLE_MAX_LENGTH - 1)));
-                index = (index + 1) % (title.length - SONG_TITLE_MAX_LENGTH + 2);
               }
-            }
-            currentPlaybackURI = mappedData.uri;
-            sendToRendererProcess('currentPlaybackReceived', mappedData);
-          } else {
-            sendToRendererProcess('loading', {});
-
-            handleAuthentication(parentWindow);
+            );
           }
-        })
-        .catch((_error: any) => {
-          sendToRendererProcess('noContent', {});
-        });
+          if (shouldShowSongMenubar()) {
+            const title = `${mappedData.artistName} - ${mappedData.musicName} - ${mappedData.albumName}`;
+
+            if (title.length <= SONG_TITLE_MAX_LENGTH) {
+              tray.setTitle(title);
+            } else {
+              if (didSongChange(mappedData)) {
+                index = 0;
+              }
+
+              tray.setTitle(title.substring(index, index + (SONG_TITLE_MAX_LENGTH - 1)));
+              index = (index + 1) % (title.length - SONG_TITLE_MAX_LENGTH + 2);
+            }
+          }
+          currentPlaybackURI = mappedData.uri;
+          sendToRendererProcess('currentPlaybackReceived', mappedData);
+        } else {
+          sendToRendererProcess('loading', {});
+
+          handleAuthentication(parentWindow);
+        }
+      })
+      .catch((_error: any) => {
+        sendToRendererProcess('noContent', {});
+      });
   }
 
   function sendToRendererProcess(channel: string, data: any) {
@@ -121,19 +121,19 @@ export function handleMediaPlayback(parentWindow: BrowserWindow, tray: Tray) {
   function handleAddToPlaylistButtonClicked() {
     const accessToken = get('accessToken');
     getPlaylists(accessToken)
-        .then((data: any) => {
-          const mappedData = playlistsToView(data);
-          sendToRendererProcess('playlistsReceived', mappedData);
-        });
+      .then((data: any) => {
+        const mappedData = playlistsToView(data);
+        sendToRendererProcess('playlistsReceived', mappedData);
+      });
   }
 
   function handlePlaylistSelected(data: any) {
     const accessToken = get('accessToken');
     const {playlistId, uri} = data;
     addTrackToPlaylist(accessToken, playlistId, uri)
-        .then(response => {
-          response.error ? handleAuthentication(parentWindow) : sendToRendererProcess('trackAdded', {});
-        });
+      .then(response => {
+        response.error ? handleAuthentication(parentWindow) : sendToRendererProcess('trackAdded', {});
+      });
   }
 }
 

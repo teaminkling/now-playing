@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>Spotify Now Playing</title>
 
-  <link href="css/mini-player.css" rel="stylesheet" type="text/css"/>
+  <link href="src/css/renderer.css" rel="stylesheet" type="text/css"/>
 
   <!--suppress SpellCheckingInspection -->
   <link crossorigin="anonymous"
@@ -22,13 +22,16 @@
 <body>
 
 <div id="player-container"></div>
-<div id="loader-container" class="loader"></div>
+<div class="loader" id="loader-container"></div>
 <div id="add-container"></div>
-<div id="no-content-container" style="display: none;">
+<div id="no-content-container" class="hidden">
   <h1>Oh no! :(</h1>
   <p class="text-align-left">
     Sorry, something went wrong! Please try again.
   </p>
 </div>
+
+<script src="dist/js/bundle.js"></script>
+
 </body>
 </html>

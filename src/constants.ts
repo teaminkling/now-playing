@@ -35,13 +35,13 @@ export const SPOTIFY_REDIRECT_URI: string = process.env.REDIRECT_URI!.trim();
  * The scopes required for Spotify's API.
  */
 export const SPOTIFY_SCOPES = [
-    "user-read-playback-state",
-    "user-modify-playback-state",
-    "playlist-read-collaborative",
-    "playlist-read-private",
-    "playlist-modify-public",
-    "playlist-modify-private",
-    "user-library-modify",
+  "user-read-playback-state",
+  "user-modify-playback-state",
+  "playlist-read-collaborative",
+  "playlist-read-private",
+  "playlist-modify-public",
+  "playlist-modify-private",
+  "user-library-modify",
 ];
 
 /**
