@@ -64,8 +64,9 @@ export function handleMiniPlayer() {
 
   /* Populate the window with HTML and set the initial loading state. */
 
-  miniPlayer.loadFile(path.join(__dirname, '../../index.html')).then(null);
-  miniPlayer.webContents.send('loading', {});
+  miniPlayer.loadFile(path.join(__dirname, '../../index.html')).then(() => {
+    miniPlayer.webContents.send('loading', {});
+  });
 
   return miniPlayer;
 }

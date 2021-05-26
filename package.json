@@ -4,7 +4,7 @@
   "description": "A tool for macOS and Spotify to extend functionality of Spotify Desktop.",
   "main": "dist/main.js",
   "scripts": {
-    "build": "tsc",
+    "build": "webpack --config webpack.config.js",
     "copy": "cp -r src/css/ dist/css/ && cp -r src/img dist/img",
     "clean": "rm -rf dist/*",
     "start": "electron .",
@@ -22,16 +22,20 @@
   "devDependencies": {
     "@types/nconf": "^0.10.0",
     "@types/node-notifier": "^8.0.0",
-    "browserify": "^17.0.0",
     "dotenv": "^10.0.0",
     "electron": "^13.0.0",
     "electron-builder": "^20.36.2",
     "electron-fetch": "^1.3.0",
-    "eslint": "^5.9.0",
+    "eslint": "^7.27.0",
+    "eslint-webpack-plugin": "^2.5.4",
     "nconf": "^0.10.0",
     "node-notifier": "^8.0.1",
+    "ts-loader": "^9.2.2",
     "tslib": "^2.2.0",
-    "typescript": "^4.2.4"
+    "typescript": "^4.2.4",
+    "webpack": "^5.37.1",
+    "webpack-cli": "^4.7.0",
+    "yargs": "^17.0.1"
   },
   "dependencies": {}
 }
