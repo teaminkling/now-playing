@@ -1,0 +1,35 @@
+name: "Build and Test"
+on: [push]
+
+#
+# For each push, check that the project builds and tests pass (and run coverage if applicable).
+#
+# Common tasks include:
+#
+# - Build the project.
+# - Run the test suite for the project.
+# - Run code qualimetry (linters, graders).
+# - Calculate and upload coverage reports.
+# - Create documents and check if git diff exists.
+# - Set version and check if git diff exists.
+#
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    #
+    # TODO
+    #
+
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+    - uses: actions/checkout@v2
+
+    #
+    # TODO
+    #

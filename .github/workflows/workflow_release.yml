@@ -1,0 +1,33 @@
+name: "Release"
+on:
+  push:
+    tags:
+      - "v*"
+
+#
+# Perform the integration and deployment tasks. Usual candidates include:
+#
+# - Create and store packages/images to a registry.
+# - Deploy to a production environment.
+# - Create a blog post with the release notes.
+#
+
+jobs:
+  integration:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    #
+    # TODO
+    #
+
+  deployment:
+    runs-on: ubuntu-latest
+    needs: integration
+    steps:
+    - uses: actions/checkout@v2
+
+    #
+    # TODO
+    #
