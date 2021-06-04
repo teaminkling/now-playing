@@ -1,6 +1,6 @@
 {
   "name": "spotify-now-playing",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "A tool for macOS and Spotify to extend functionality of Spotify Desktop.",
   "main": "src/index.js",
   "scripts": {

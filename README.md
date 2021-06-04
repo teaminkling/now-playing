@@ -61,15 +61,16 @@ This will create a `.dmg` file in `dist/` (possibly a new directory).
 
 ## Notice
 
-Spotify Now Playing is not affiliated with Apple or Spotify. These business names, graphics (such as the Spotify logo), 
-and other references are the trademarks of their respective copyright holders.
+Spotify Now Playing is not affiliated with Apple or Spotify. These business names, graphics, style guide, and other 
+references are the trademarks of their respective copyright holders.
+
+The graphic design of this app was designed by Cindy Xu of Inkling Interactive.
 
 This project was first forked and then copied from @davicorreiajr's [original repo][old-version-repo].
 
 This project uses the [MIT License](LICENSE).
 
-[latest-release]: https://github.com/davicorreiajr/spotify-now-playing/releases/latest
-[linux-incompatibility-issue]: https://github.com/electron/electron/issues/6773
+[latest-release]: https://github.com/teaminkling/mac-spotify-np/releases/latest
 [spotify-app-registration]: https://developer.spotify.com/documentation/general/guides/app-settings/#register-your-app
 [github-new-token]: https://github.com/settings/tokens/new
 [old-version-repo]: https://github.com/davicorreiajr/spotify-now-playing
