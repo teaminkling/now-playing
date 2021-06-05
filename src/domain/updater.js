@@ -1,5 +1,6 @@
 'use strict';
 require('../sentry');
+const semver = require('semver');
 const { app, ipcMain } = require('electron');
 const githubDatasource = require('../data-source/github-datasource');
 const windowFactory = require('../helpers/window-factory');
@@ -12,8 +13,7 @@ ipcMain.on('downloadUpdateButtonClicked', () => updateWindow.webContents.downloa
 ipcMain.on('cancelUpdateButtonClicked', () => updateWindow.close());
 
 function isAppUpdated(versionFromGithub) {
-  const localAppVersion = app.getVersion();
-  return localAppVersion === versionFromGithub;
+  return semver.gte(app.getVersion(), versionFromGithub.replace("v", ""));
 }
 
 function createUpdateWindow(parentWindow) {
