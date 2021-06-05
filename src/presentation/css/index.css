@@ -196,3 +196,7 @@ a:hover {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+.update-options {
+  color: var(--color-primary);
+}

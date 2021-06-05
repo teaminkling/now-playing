@@ -1,0 +1,28 @@
+productName: Now Playing for Spotify
+appId: com.teaminkling.now-playing-for-spotify
+
+copyright: MIT
+
+mac:
+  category: public.app-category.music
+  target: dmg
+  icon: build/icon.icns
+
+  # Signing and Notarisation:
+
+  identity: YOUR_CERTIFICATE_IDENTITY_HERE
+  hardenedRuntime: true
+  entitlements: build/entitlements.mac.plist
+  entitlementsInherit: build/entitlements.mac.plist
+  gatekeeperAssess: false
+
+dmg:
+  # We sign the app, not the DMG. Gatekeeper will allow this app to be installed.
+
+  sign: false
+
+afterSign: scripts/notarize.js
+
+files: ["src/**/*", "package.json", ".env.json", "build/*"]
+
+asarUnpack: ["./node_modules/node-notifier/vendor/**"]

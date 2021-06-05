@@ -45,7 +45,7 @@ exports.execute = function(parentWindow) {
 
   function handleErrorCurrentUser() {
     const refreshToken = localStorage.get('refreshToken');
-    
+
     if(!refreshToken) getAuthorization();
     getTokenFromRefreshToken(refreshToken);
   }

@@ -1,35 +1,38 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <title>Update Now Playing for Spotify</title>
+
   <meta charset="UTF-8">
-  <title>Update Spotify - now playing</title>
-  <link href="../css/index.css" rel="stylesheet" type="text/css"/>
+
+  <link href="../css/index.css" rel="stylesheet" type="text/css">
 </head>
 <body>
   <div id="update-information-container">
-    <h1>New update available for Spotify - now playing!</h1>
-    <p class="spacement-bottom-lg">
-      <a id="download-update-link">Download</a> the .dmg file and move the app to the Application folder again.
-      Or <a id="cancel-update-link">do it latter</a>.
+    <h1>New update available!</h1>
+
+    <p class="spacement-bottom-md">
+      You can:
     </p>
-    <p class="caption">
-      Sorry for making you download this dmg again :(
-      Since the app is a personal initiative,
-      I don't have the money to make the update the way you're probably used to.
-    </p>
+
+    <ul class="update-options">
+      <li><a id="download-update-link">Download</a> the .dmg installer.</li>
+      <li><a id="cancel-update-link">Postpone</a> to next launch.</li>
+    </ul>
   </div>
-  <div id="updating-container" style="display: none">
-    <h1>Thanks for updating Spotify - now playing!</h1>
-    <p>Your file is being downloaded...</p>
+  <div id="updating-container" style="display: none;">
+    <h1>Thanks for updating!</h1>
+
+    <p>Please wait; your update is being downloaded...</p>
   </div>
-  <div id="update-app-container" style="display: none">
+  <div id="update-app-container" style="display: none;">
     <h1>Your update has been downloaded!</h1>
-    <p class="spacement-bottom-lg">
-      Now, go to your Downloads folder,
-      run the .dmg file and
-      move the app to the Application folder
-      (yes, you need to replace the old app).
-    </p>
+    <ol class="update-options">
+      <li>Navigate to your Downloads folder.</li>
+      <li>Double-click the .dmg file.</li>
+      <li>Drag the app to your Applications folder.</li>
+      <li>Allow overwriting if asked!</li>
+    </ol>
     <p><a id="close-window">Close</a></p>
   </div>
   <script src="../js/update-view.js"></script>
