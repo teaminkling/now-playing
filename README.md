@@ -14,13 +14,7 @@ Now Playing is a tool for macOS and Spotify used to extend functionality of Spot
 Download the `.dmg` file from the [latest release][latest-release], run it, and move the app to your 
 system's `Application` folder!
 
-Alternatively, you can use Homebrew:
-
-> This will install the latest version from the [old version][old-version-repo], for now.
-
-```
-brew install spotify-now-playing
-```
+This application is not yet available in Homebrew Cask because it does not have the required popularity: 75 stars.
 
 ## Contributing
 
