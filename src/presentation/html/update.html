@@ -9,7 +9,7 @@
 </head>
 <body>
   <div id="update-information-container">
-    <h1>New update available for Now Playing for Spotify!</h1>
+    <h1>New update available!</h1>
 
     <p class="spacement-bottom-md">
       You can:
@@ -21,15 +21,18 @@
     </ul>
   </div>
   <div id="updating-container" style="display: none;">
-    <h1>Thanks for updating Now Playing for Spotify!</h1>
+    <h1>Thanks for updating!</h1>
 
-    <p>Your file is being downloaded to your Downloads Folder...</p>
+    <p>Please wait; your update is being downloaded...</p>
   </div>
   <div id="update-app-container" style="display: none;">
     <h1>Your update has been downloaded!</h1>
-    <p class="spacement-bottom-lg">
-      Please navigate to your Downloads folder and install the .dmg, overwriting the old Now Playing for Spotify .app.
-    </p>
+    <ol class="update-options">
+      <li>Navigate to your Downloads folder.</li>
+      <li>Double-click the .dmg file.</li>
+      <li>Drag the app to your Applications folder.</li>
+      <li>Allow overwriting if asked!</li>
+    </ol>
     <p><a id="close-window">Close</a></p>
   </div>
   <script src="../js/update-view.js"></script>

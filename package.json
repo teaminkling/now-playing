@@ -1,5 +1,5 @@
 {
-  "name": "spotify-now-playing",
+  "name": "now-playing-for-spotify",
   "version": "0.8.0",
   "description": "A tool for macOS and Spotify to extend functionality of Spotify Desktop.",
   "main": "src/index.js",
@@ -21,9 +21,7 @@
     "electron": "^3.0.9",
     "electron-builder": "^20.43.0",
     "electron-notarize": "^1.0.0",
-    "eslint": "^5.9.0"
-  },
-  "dependencies": {
+    "eslint": "^5.9.0",
     "@sentry/electron": "0.14.0",
     "electron-fetch": "^1.3.0",
     "nconf": "^0.10.0",
