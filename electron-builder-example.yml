@@ -1,11 +1,13 @@
-appId: com.electron.spotify-now-playing
-publish:
-  provider: github
-  token: PUT YOUR TOKEN HERE
-productName: Spotify Now Playing
+productName: Now Playing for Spotify
+appId: com.teaminkling.now-playing-for-spotify
+
 copyright: MIT
+
 mac:
   category: public.app-category.music
   target: dmg
+  icon: src/img/icon.png
+
 files: ["src/**/*", "package.json", ".env.json"]
+
 asarUnpack: ["./node_modules/node-notifier/vendor/**"]
