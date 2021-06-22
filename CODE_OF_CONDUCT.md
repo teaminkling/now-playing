@@ -51,5 +51,6 @@ temporary bans, and permanent bans.
 
 ## Attribution
 
-This Code is adapted from the [Contributor Covenant](https://www.contributor-covenant.org/),
-[version 1.4](https://www.contributor-covenant.org/version/1/4/code-of-conduct.html).
+This Code is adapted from the [Contributor Covenant][contributor-covenant] version 1.4.
+
+[contributor-covenant]: https://www.contributor-covenant.org/version/1/4/code-of-conduct.html

@@ -6,4 +6,5 @@ labels: bug
 assignees: ''
 ---
 
-> Describe your problem. Please include at least **reproduction steps**, **expected output**, and environment.
+> Describe your problem. Please include at least **reproduction steps**, **expected output**, and environment. 
+> Screenshots help!

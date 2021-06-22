@@ -1,1 +1,7 @@
-branchName: full
+branchName:     '${issue.user.login}/issue-${issue.number}-${issue.title^}'
+silent:         true
+autoCloseIssue: true
+openDraftPR:    true
+branches:
+  - label:      question
+    skip:       true

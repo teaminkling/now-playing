@@ -6,4 +6,5 @@ labels: enhancement
 assignees: ''
 ---
 
-> Please explain the problem/why you would want to see a change and any workarounds you might have in place.
+> Please explain the problem/why you would want to see a change and any workarounds you might have in place. 
+> Screenshots, paper prototypes, designs etc. help!
