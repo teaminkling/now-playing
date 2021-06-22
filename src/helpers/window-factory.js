@@ -9,6 +9,7 @@ function getAuth(options) {
     modal: true,
     show: false,
     webPreferences: {
+      contextIsolation: false,
       nodeIntegration: false,
       preload: `${app.getAppPath()}/src/sentry.js`
     }
@@ -30,6 +31,8 @@ function getMain() {
     show: false,
     frame: false,
     webPreferences: {
+      contextIsolation: false,
+      nodeIntegration: true,
       preload: `${app.getAppPath()}/src/sentry.js`
     }
   });
@@ -43,6 +46,8 @@ function getUpdater(options) {
     modal: true,
     show: false,
     webPreferences: {
+      contextIsolation: false,
+      nodeIntegration: true,
       preload: `${app.getAppPath()}/src/sentry.js`
     }
   });
