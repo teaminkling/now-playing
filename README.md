@@ -1,19 +1,21 @@
 # Now Playing for Spotify
 
-Now Playing is a tool for macOS and Spotify used to extend functionality of Spotify Desktop. It:
+[![Maintainability][maintainability-badge]][maintainability-link]
+[![Issues](https://img.shields.io/github/issues/teaminkling/mac-spotify-np)][issues]
+[![Downloads][github-downloads-badge]][releases]
+[![Latest Version][github-latest-release-badge]][latest-release]
 
-- Creates a tray mini-player interface.
-- Allows you to add tracks to your library and playlists from the interface.
-- (Optionally) displays a notification in Notification Center.
-  - Tested to be working on macOS 11.3.1 (Big Sur)!
+Now Playing is a tool for macOS and Spotify used to extend functionality of Spotify Desktop.
 
-![](docs/img/screenshot.png)
+## Features
 
-## Requirements
+### Mini-Player and Notifications!
 
-- macOS 10.15 (Catalina) or higher.
+![](docs/img/screenshot_1.png)
 
-Older versions of macOS most likely will work but are not supported.
+### Song At-A-Glance and Playlist Shortcuts!
+
+![](docs/img/screenshot_2.png)
 
 ## Installing
 
@@ -52,6 +54,12 @@ Thanks to @davicorreiajr's [original project][old-version-repo] on which this ha
 
 This project uses the [MIT License](LICENSE).
 
-[latest-release]:           https://github.com/teaminkling/mac-spotify-np/releases/latest
-[spotify-app-registration]: https://developer.spotify.com/documentation/general/guides/app-settings
-[old-version-repo]:         https://github.com/davicorreiajr/spotify-now-playing
+[maintainability-badge]:       https://api.codeclimate.com/v1/badges/87b6080da2e2dce357a2/maintainability
+[maintainability-link]:        https://codeclimate.com/github/teaminkling/mac-spotify-np/maintainability
+[github-downloads-badge]:      https://img.shields.io/github/downloads/teaminkling/mac-spotify-np/total
+[github-latest-release-badge]: https://img.shields.io/github/v/release/teaminkling/mac-spotify-np
+[issues]:                      https://github.com/teaminkling/mac-spotify-np/issues
+[releases]:                    https://github.com/teaminkling/mac-spotify-np/releases
+[latest-release]:              https://github.com/teaminkling/mac-spotify-np/releases/latest
+[spotify-app-registration]:    https://developer.spotify.com/documentation/general/guides/app-settings
+[old-version-repo]:            https://github.com/davicorreiajr/spotify-now-playing
