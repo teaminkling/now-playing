@@ -15,7 +15,7 @@ require('dotenv').config();
 exports.default = async function notarizing(context) {
   const { electronPlatformName, appOutDir } = context;
   if (electronPlatformName !== 'darwin') {
-    throw "Can't sign on non-macOS platforms!";
+    throw Error("Can't sign on non-macOS platforms!");
   }
 
   const appName = context.packager.appInfo.productFilename;
@@ -24,10 +24,10 @@ exports.default = async function notarizing(context) {
   const appleIdPassword = process.env.APPLE_ID_PASSWORD;
 
   if (!appleId || !appleIdPassword) {
-    throw "You must have APPLE_ID and APPLE_ID_PASSWORD set to notarize this application."
+    throw Error("You must have APPLE_ID and APPLE_ID_PASSWORD set to notarize this application.");
   }
 
-  return await notarize({
+  return notarize({
     appBundleId: appBundleId,
     appPath: `${appOutDir}/${appName}.app`,
     appleId: appleId,
