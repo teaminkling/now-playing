@@ -19,7 +19,6 @@ function launchApp() {
 
   window = windowFactory.get('main');
   setWindowConfigs(window);
-  setApplicationMenuToEnableCopyPaste();
 
   window.loadFile(path.join(__dirname, 'presentation/html/index.html'));
   window.webContents.send('loading', {});
@@ -60,21 +59,6 @@ function showAllWindows() {
 
 function setWindowConfigs(window) {
   window.setVisibleOnAllWorkspaces(true);
-}
-
-function setApplicationMenuToEnableCopyPaste() {
-  const template = [
-    {
-      label: 'Edit',
-      submenu: [
-        { label: 'Copy', accelerator: 'CmdOrCtrl+C', selector: 'copy:' },
-        { label: 'Paste', accelerator: 'CmdOrCtrl+V', selector: 'paste:' },
-        { label: 'Select All', accelerator: 'CmdOrCtrl+A', selector: 'selectAll:' }
-      ]
-    }
-  ];
-
-  Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 }
 
 function setWindowListeners(window) {
