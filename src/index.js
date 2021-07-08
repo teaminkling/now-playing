@@ -58,7 +58,7 @@ function showAllWindows() {
 }
 
 function setWindowConfigs(window) {
-  window.setVisibleOnAllWorkspaces(true);
+  window.setVisibleOnAllWorkspaces(true, {'visibleOnFullScreen': true});
 }
 
 function setWindowListeners(window) {

@@ -760,10 +760,10 @@ electron-publish@21.2.0:
     lazy-val "^1.0.4"
     mime "^2.4.4"
 
-electron@9.2.0:
-  version "9.2.0"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-9.2.0.tgz#d9fc8c8c9e5109669c366bd7b9ba83b06095d7a4"
-  integrity sha512-4ecZ3rcGg//Gk4fAK3Jo61T+uh36JhU6HHR/PTujQqQiBw1g4tNPd4R2hGGth2d+7FkRIs5GdRNef7h64fQEMw==
+electron@9.4.4:
+  version "9.4.4"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-9.4.4.tgz#2a74a0655a74bd326216672c5ae6ed3a44451446"
+  integrity sha512-dcPlTrMWQu5xuSm6sYV42KK/BRIqh3erM8v/WtZqaDmG7pkCeJpvw26Dgbqhdt78XmqqGiN96giEe6A3S9vpAQ==
   dependencies:
     "@electron/get" "^1.0.1"
     "@types/node" "^12.0.12"
