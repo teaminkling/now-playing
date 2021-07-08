@@ -14,8 +14,13 @@ let tray;
 
 function launchApp() {
   tray = new Tray(path.join(__dirname, 'img/TrayTemplate.png'));
+
   setTrayConfigs(tray);
   setTrayListeners(tray);
+
+  /* Allow using the renderer on the main window. */
+
+  require('@electron/remote/main').initialize();
 
   window = windowFactory.get('main');
   setWindowConfigs(window);
