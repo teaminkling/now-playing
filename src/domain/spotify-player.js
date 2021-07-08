@@ -48,7 +48,11 @@ exports.execute = function(parentWindow, tray) {
             );
           }
           if(shouldShowSongMenubar()) {
-            const title = `${mappedData.artistName} - ${mappedData.musicName} - ${mappedData.albumName}`;
+            /*
+             * Note: album name is not included in the tray song display as it is not likely wanted at a glance.
+             */
+
+            const title = `${mappedData.artistName} - ${mappedData.musicName}`;
 
             if(title.length <= SONG_TITLE_MAX_LENGTH) {
               tray.setTitle(title);
@@ -56,6 +60,8 @@ exports.execute = function(parentWindow, tray) {
               if(didSongChange(mappedData)) {
                 index = 0;
               }
+
+              /* Handle overflow of the title. */
 
               tray.setTitle(title.substring(index, index + (SONG_TITLE_MAX_LENGTH - 1)));
               index = (index + 1) % (title.length - SONG_TITLE_MAX_LENGTH + 2);

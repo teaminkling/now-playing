@@ -13,7 +13,7 @@ module.exports = {
   UPDATER_WINDOW_WIDTH: 500,
   UPDATER_WINDOW_HEIGHT: 250,
   UPDATE_PERIOD: 750,
-  SONG_TITLE_MAX_LENGTH: 25,
+  SONG_TITLE_MAX_LENGTH: 64,
   ERROR_MESSAGES: {
     getCurrentPlayback: 'getCurrentPlayback',
     getSpotifyTokenFromAuthCode: 'getSpotifyTokenFromAuthCode',
