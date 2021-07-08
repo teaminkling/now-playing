@@ -55,7 +55,7 @@ exports.execute = function(parentWindow, tray) {
             const title = `${mappedData.artistName} - ${mappedData.musicName}`;
 
             if(title.length <= SONG_TITLE_MAX_LENGTH) {
-              tray.setTitle(title);
+              tray.setTitle(title, {"fontType": "monospaced"});
             } else {
               if(didSongChange(mappedData)) {
                 index = 0;
@@ -63,7 +63,9 @@ exports.execute = function(parentWindow, tray) {
 
               /* Handle overflow of the title. */
 
-              tray.setTitle(title.substring(index, index + (SONG_TITLE_MAX_LENGTH - 1)));
+              tray.setTitle(
+                title.substring(index, index + (SONG_TITLE_MAX_LENGTH - 1)), {"fontType": "monospaced"},
+              );
               index = (index + 1) % (title.length - SONG_TITLE_MAX_LENGTH + 2);
             }
           }

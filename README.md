@@ -9,6 +9,12 @@ Now Playing is a tool for macOS and Spotify used to extend functionality of Spot
 
 ![](docs/img/screenshot.png)
 
+## Requirements
+
+- macOS 10.15 (Catalina) or higher.
+
+Older versions of macOS may work but are not supported.
+
 ## Installing
 
 > This application is not yet available in Homebrew Cask because it does not have the required popularity: 75 stars.
@@ -24,18 +30,16 @@ Install dependencies:
 yarn install
 ```
 
-Since this app uses the Spotify API, you [must create and register an app][spotify-app-registration] in the Spotify 
-Developer portal.
+You then [must create and register an app][spotify-app-registration] in the Spotify Developer portal. Rename `.env.
+json.example` (file in the root of this project) to `.env.json` and update values.
 
-Once you have done this, rename `.env.json.example` (file in the root of this project) to `.env.json` and update values.
-
-Finally, start the app:
+To start the app, run:
 
 ```
 yarn start
 ```
 
-## Notice
+## Notes
 
 New maintainers/forkers can see the [DEPLOYMENT.md](DEPLOYMENT.md) file for instructions on distribution.
 
