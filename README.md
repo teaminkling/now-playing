@@ -13,14 +13,14 @@ Now Playing is a tool for macOS and Spotify used to extend functionality of Spot
 
 - macOS 10.15 (Catalina) or higher.
 
-Older versions of macOS may work but are not supported.
+Older versions of macOS most likely will work but are not supported.
 
 ## Installing
 
-> This application is not yet available in Homebrew Cask because it does not have the required popularity: 75 stars.
+> This application is not yet available in Homebrew Cask. Help us get to 75 stars!
 
 Download the `.dmg` file from the [latest release][latest-release], run it, and move the app to your system's
-`Application` folder!
+`Application` folder.
 
 ## Local Development
 
