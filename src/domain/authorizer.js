@@ -8,6 +8,12 @@ const windowFactory = require('../helpers/window-factory');
 const sentryConfig = require('../helpers/sentry-config');
 const { SPOTIFY_SCOPES, REDIRECT_URI, SPOTIFY_CLIENT_ID } = require('../helpers/constants');
 
+// TODO: A URL joiner is safer.
+
+const SPOTIFY_ACCOUNTS_BASE_URL = "https://accounts.spotify.com";
+
+const SPOTIFY_AUTHORIZATION_URL = `${SPOTIFY_ACCOUNTS_BASE_URL}/en/authorize`;
+
 let authorizing;
 
 exports.execute = function(parentWindow) {
@@ -50,9 +56,15 @@ exports.execute = function(parentWindow) {
     getTokenFromRefreshToken(refreshToken);
   }
 
+  /**
+   * For an unauthenticated user (usually a new user), authenticate them using the Spotify OAuth2 flow.
+   */
   function getAuthorization() {
+    const spotifyAuthUrl = (
+      `${SPOTIFY_AUTHORIZATION_URL}?client_id=${SPOTIFY_CLIENT_ID}&response_type=code&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=${encodeURI(SPOTIFY_SCOPES)}`
+    );
+
     const spotifyAuthWindow = windowFactory.get('auth', { parentWindow });
-    const spotifyAuthUrl = `https://accounts.spotify.com/en/authorize?client_id=${SPOTIFY_CLIENT_ID}&response_type=code&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=${encodeURI(SPOTIFY_SCOPES)}`;
     spotifyAuthWindow.loadURL(spotifyAuthUrl);
 
     spotifyAuthWindow.once('ready-to-show', () => spotifyAuthWindow.show());
