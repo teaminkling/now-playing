@@ -55,18 +55,13 @@ exports.execute = function(parentWindow, tray) {
             const title = `${mappedData.artistName} - ${mappedData.musicName}`;
 
             if(title.length <= SONG_TITLE_MAX_LENGTH) {
-              tray.setTitle(title, {"fontType": "monospaced"});
+              tray.setTitle(" " + title, {"fontType": "monospaced"});
             } else {
-              if(didSongChange(mappedData)) {
-                index = 0;
-              }
-
               /* Handle overflow of the title. */
 
               tray.setTitle(
-                title.substring(index, index + (SONG_TITLE_MAX_LENGTH - 1)), {"fontType": "monospaced"},
+                " " + title.substring(0, (SONG_TITLE_MAX_LENGTH - 1)) + "...", {"fontType": "monospaced"},
               );
-              index = (index + 1) % (title.length - SONG_TITLE_MAX_LENGTH + 2);
             }
           }
           currentPlaybackURI = mappedData.uri;
