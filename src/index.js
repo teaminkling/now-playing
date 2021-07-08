@@ -13,7 +13,7 @@ let window;
 let tray;
 
 function launchApp() {
-  tray = new Tray(path.join(__dirname, 'img/system.png'));
+  tray = new Tray(path.join(__dirname, 'img/TrayTemplate.png'));
   setTrayConfigs(tray);
   setTrayListeners(tray);
 
