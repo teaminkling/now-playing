@@ -1,11 +1,9 @@
-# Now Playing for Spotify
+# Now Playing (For Spotify)
 
 [![Maintainability][maintainability-badge]][maintainability-link]
 [![Issues](https://img.shields.io/github/issues/teaminkling/mac-spotify-np)][issues]
 [![Downloads][github-downloads-badge]][releases]
 [![Latest Version][github-latest-release-badge]][latest-release]
-
-Now Playing is a tool for macOS and Spotify used to extend functionality of Spotify Desktop.
 
 ## Features
 
@@ -55,8 +53,8 @@ yarn start
 
 New maintainers/forkers can see the [DEPLOYMENT.md](DEPLOYMENT.md) file for instructions on distribution.
 
-Neither Apple nor Spotify associate with Now Playing for Spotify. These business names, graphics, style guide, and 
-other references are the trademarks of their respective copyright holders.
+Neither Apple nor Spotify associate with Now Playing. These business names, graphics, style guide, and other references
+are the trademarks of their respective copyright holders.
 
 Thanks to Cindy Xu of Inkling Interactive for designing the tray and app logos.
 
