@@ -29,7 +29,10 @@ exports.getToken = function(body) {
   return fetch('https://accounts.spotify.com/api/token', {
     method: 'POST',
     body: body.toString(),
-    headers: { Authorization: `Basic ${authorization}` }
+    headers: {
+      Authorization: `Basic ${authorization}`,
+      'Content-Type': 'application/x-www-form-urlencoded',
+    }
   }).then(
     res => res.json()
   );
