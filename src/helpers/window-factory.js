@@ -12,7 +12,7 @@ function getAuth(options) {
       contextIsolation: false,
       nodeIntegration: false,
       preload: `${app.getAppPath()}/src/sentry.js`,
-      enableRemoteModule: true,
+      enableRemoteModule: false,
     }
   });
 }
@@ -51,7 +51,7 @@ function getUpdater(options) {
       contextIsolation: false,
       nodeIntegration: true,
       preload: `${app.getAppPath()}/src/sentry.js`,
-      enableRemoteModule: true,
+      enableRemoteModule: false,
     }
   });
 }

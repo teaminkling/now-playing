@@ -32,7 +32,6 @@ function launchApp() {
   authorizer.execute(window);
   spotify.execute(window, tray);
   updater.execute(window);
-  setInterval(() => updater.execute(window), 86400000);
 }
 
 function setTrayConfigs(tray) {
@@ -128,6 +127,8 @@ function manageTrayRightClick(tray) {
 
 ipcMain.on('fixHeight', (event, height) => window.setSize(MAIN_WINDOW_WIDTH, height, true));
 
-if(app.dock) app.dock.hide();
+if (app.dock) {
+  app.dock.hide();
+}
 
 app.on('ready', launchApp);
