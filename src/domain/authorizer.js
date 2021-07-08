@@ -95,14 +95,18 @@ exports.execute = function(parentWindow) {
 
   function getTokenFromRefreshToken(refreshToken) {
     const body = new URLSearchParams();
+
     body.append('grant_type', 'refresh_token');
     body.append('refresh_token', refreshToken);
 
     spotifyDataSource.getToken(body)
       .then(json => {
-        if(json.access_token) {
+        if (json.access_token) {
           localStorage.save('accessToken', json.access_token);
-          if(json.refresh_token) localStorage.save('refreshToken', json.refresh_token);
+
+          if (json.refresh_token) {
+            localStorage.save('refreshToken', json.refresh_token)
+          }
           subject.emit('token', json.access_token);
         } else {
           subject.emit('errorTokenFromRefreshToken', null);
