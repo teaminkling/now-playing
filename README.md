@@ -13,6 +13,10 @@ Now Playing is a tool for macOS and Spotify used to extend functionality of Spot
 
 ![](docs/img/screenshot_1.png)
 
+### Big Sur Expanded Notifications!
+
+![](docs/img/screenshot_3.png)
+
 ### Song At-A-Glance and Playlist Shortcuts!
 
 ![](docs/img/screenshot_2.png)
