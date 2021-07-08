@@ -7,7 +7,7 @@ Now Playing is a tool for macOS and Spotify used to extend functionality of Spot
 - (Optionally) displays a notification in Notification Center.
   - Tested to be working on macOS 11.3.1 (Big Sur)!
 
-![](spotify-now-playing.gif)
+![](docs/img/screenshot.png)
 
 ## Installing
 
