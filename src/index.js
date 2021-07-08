@@ -14,12 +14,16 @@ let tray;
 
 function launchApp() {
   tray = new Tray(path.join(__dirname, 'img/TrayTemplate.png'));
+
   setTrayConfigs(tray);
   setTrayListeners(tray);
 
+  /* Allow using the renderer on the main window. */
+
+  require('@electron/remote/main').initialize();
+
   window = windowFactory.get('main');
   setWindowConfigs(window);
-  setApplicationMenuToEnableCopyPaste();
 
   window.loadFile(path.join(__dirname, 'presentation/html/index.html'));
   window.webContents.send('loading', {});
@@ -28,11 +32,9 @@ function launchApp() {
   authorizer.execute(window);
   spotify.execute(window, tray);
   updater.execute(window);
-  setInterval(() => updater.execute(window), 86400000);
 }
 
 function setTrayConfigs(tray) {
-  tray.setHighlightMode('never');
   tray.setIgnoreDoubleClickEvents(true);
 }
 
@@ -60,22 +62,7 @@ function showAllWindows() {
 }
 
 function setWindowConfigs(window) {
-  window.setVisibleOnAllWorkspaces(true);
-}
-
-function setApplicationMenuToEnableCopyPaste() {
-  const template = [
-    {
-      label: 'Edit',
-      submenu: [
-        { label: 'Copy', accelerator: 'CmdOrCtrl+C', selector: 'copy:' },
-        { label: 'Paste', accelerator: 'CmdOrCtrl+V', selector: 'paste:' },
-        { label: 'Select All', accelerator: 'CmdOrCtrl+A', selector: 'selectAll:' }
-      ]
-    }
-  ];
-
-  Menu.setApplicationMenu(Menu.buildFromTemplate(template));
+  window.setVisibleOnAllWorkspaces(true, {'visibleOnFullScreen': true});
 }
 
 function setWindowListeners(window) {
@@ -140,6 +127,8 @@ function manageTrayRightClick(tray) {
 
 ipcMain.on('fixHeight', (event, height) => window.setSize(MAIN_WINDOW_WIDTH, height, true));
 
-if(app.dock) app.dock.hide();
+if (app.dock) {
+  app.dock.hide();
+}
 
 app.on('ready', launchApp);

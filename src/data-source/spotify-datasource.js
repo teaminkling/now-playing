@@ -15,16 +15,27 @@ exports.getCurrentPlayback = function(accessToken) {
     .then(res => res.json());
 };
 
+/**
+ * Get an auth token from the given body.
+ *
+ * @param body the URLSearchParams for the POST request
+ * @returns {Promise<any>} the response from Spotify's API
+ */
 exports.getToken = function(body) {
-  body.append('client_id', SPOTIFY_CLIENT_ID);
-  body.append('client_secret', SPOTIFY_CLIENT_SECRET);
+  const authorization = Buffer.from(
+    `${SPOTIFY_CLIENT_ID}:${SPOTIFY_CLIENT_SECRET}`
+  ).toString('base64');
 
   return fetch('https://accounts.spotify.com/api/token', {
     method: 'POST',
     body: body.toString(),
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-  })
-    .then(res => res.json());
+    headers: {
+      Authorization: `Basic ${authorization}`,
+      'Content-Type': 'application/x-www-form-urlencoded',
+    }
+  }).then(
+    res => res.json()
+  );
 };
 
 exports.shuffle = function(accessToken, state) {  

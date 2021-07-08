@@ -11,7 +11,8 @@ function getAuth(options) {
     webPreferences: {
       contextIsolation: false,
       nodeIntegration: false,
-      preload: `${app.getAppPath()}/src/sentry.js`
+      preload: `${app.getAppPath()}/src/sentry.js`,
+      enableRemoteModule: false,
     }
   });
 }
@@ -33,7 +34,8 @@ function getMain() {
     webPreferences: {
       contextIsolation: false,
       nodeIntegration: true,
-      preload: `${app.getAppPath()}/src/sentry.js`
+      preload: `${app.getAppPath()}/src/sentry.js`,
+      enableRemoteModule: true,
     }
   });
 }
@@ -48,7 +50,8 @@ function getUpdater(options) {
     webPreferences: {
       contextIsolation: false,
       nodeIntegration: true,
-      preload: `${app.getAppPath()}/src/sentry.js`
+      preload: `${app.getAppPath()}/src/sentry.js`,
+      enableRemoteModule: false,
     }
   });
 }

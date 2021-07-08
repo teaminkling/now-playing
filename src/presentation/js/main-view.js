@@ -1,6 +1,6 @@
 'use strict';
 const { ipcRenderer } = require('electron');
-const currentWindow = require('electron').remote.getCurrentWindow();
+const currentWindow = require('@electron/remote').getCurrentWindow();
 let currentUriOfAddPage;
 
 ipcRenderer.on('currentPlaybackReceived', (event, message) => setPlayer(message));
