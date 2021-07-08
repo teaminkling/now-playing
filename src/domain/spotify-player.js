@@ -55,12 +55,12 @@ exports.execute = function(parentWindow, tray) {
             const title = `${mappedData.artistName} - ${mappedData.musicName}`;
 
             if(title.length <= SONG_TITLE_MAX_LENGTH) {
-              tray.setTitle(" " + title, {"fontType": "monospaced"});
+              tray.setTitle("   " + title);
             } else {
               /* Handle overflow of the title. */
 
               tray.setTitle(
-                " " + title.substring(0, (SONG_TITLE_MAX_LENGTH - 1)) + "...", {"fontType": "monospaced"},
+                "   " + title.substring(0, (SONG_TITLE_MAX_LENGTH - 1)) + "..."
               );
             }
           }
