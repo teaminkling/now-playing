@@ -9,15 +9,21 @@ Now Playing is a tool for macOS and Spotify used to extend functionality of Spot
 
 ## Features
 
-### Mini-Player and Notifications!
+### Mini-Player and Notifications
+
+Now Playing at its heart is a mini-player and native system notifications when running alongside Spotify Desktop!
 
 ![](docs/img/screenshot_1.png)
 
-### Big Sur Expanded Notifications!
+### Big Sur Expanded Notifications
+
+In Big Sur (and later) you can expand notifications to view the beautiful full-sized album art!
 
 ![](docs/img/screenshot_3.png)
 
-### Song At-A-Glance and Playlist Shortcuts!
+### Song At-A-Glance and Playlist Shortcuts
+
+Optionally, you can see the song you're currently listening to at a glance and quickly add songs to your library!
 
 ![](docs/img/screenshot_2.png)
 
