@@ -7,13 +7,76 @@ const localStorage = require('./local-storage');
 const SPOTIFY_CLIENT_ID = spotifyCodes.SPOTIFY_CLIENT_ID;
 const SPOTIFY_CLIENT_SECRET = spotifyCodes.SPOTIFY_CLIENT_SECRET;
 
-exports.getCurrentPlayback = function(accessToken) {
-  return fetch('https://api.spotify.com/v1/me/player', {
-    method: 'GET',
-    headers: { 'Authorization': `Bearer ${accessToken}` }
-  })
-    .then(res => res.json());
-};
+// Constants:
+
+/**
+ * The base Spotify User endpoint URL. Most API URLs derive from this one.
+ *
+ * Note that there is no slash at the end.
+ */
+const SPOTIFY_USER_ENDPOINT_URL = 'https://api.spotify.com/v1/me';
+
+/**
+ * The base Spotify Playlists endpoint URL.
+ *
+ * Note that this is not the same as the user's playlists endpoint.
+ */
+const SPOTIFY_PLAYLISTS_ENDPOINT_URL = 'https://api.spotify.com/v1/playlists';
+
+/**
+ * The API URL to get the user's library/tracks.
+ *
+ * Note that this is part of the user API.
+ */
+const SPOTIFY_USER_TRACKS_URL = `${SPOTIFY_USER_ENDPOINT_URL}/tracks`;
+
+/**
+ * The API URL to get the user's playlists.
+ *
+ * Note that this is part of the user API.
+ */
+const SPOTIFY_USER_PLAYLISTS_URL = `${SPOTIFY_USER_ENDPOINT_URL}/playlists`;
+
+/**
+ * The API URL to get the current playback.
+ */
+const SPOTIFY_USER_CURRENT_PLAYBACK_URL = `${SPOTIFY_USER_ENDPOINT_URL}/player`;
+
+/**
+ * The API URL for setting the current playback shuffle state.
+ *
+ * A state must be passed in as a URL query parameter for this to work correctly.
+ */
+const SPOTIFY_USER_SHUFFLE_PLAYBACK_URL = `${SPOTIFY_USER_ENDPOINT_URL}/player/shuffle`;
+
+/**
+ * The API URL for going to the previous track.
+ */
+const SPOTIFY_USER_PREVIOUS_TRACK_URL = `${SPOTIFY_USER_ENDPOINT_URL}/player/previous`;
+
+/**
+ * The API URL for resuming playback.
+ */
+const SPOTIFY_USER_PLAY_PLAYBACK_URL = `${SPOTIFY_USER_ENDPOINT_URL}/player/play`;
+
+/**
+ * The API URL for pausing playback.
+ */
+const SPOTIFY_USER_PAUSE_PLAYBACK_URL = `${SPOTIFY_USER_ENDPOINT_URL}/player/pause`;
+
+/**
+ * The API URL for going to the next track.
+ */
+const SPOTIFY_USER_NEXT_TRACK_URL = `${SPOTIFY_USER_ENDPOINT_URL}/player/next`;
+
+/**
+ * The maximum number of playlists allowed to be fetched per user.
+ *
+ * This cannot be higher than 50 per page.
+ */
+const MAX_PLAYLISTS_COUNT = 50;
+
+// Actions:
 
 /**
  * Get an auth token from the given body.
@@ -21,102 +84,135 @@ exports.getCurrentPlayback = function(accessToken) {
  * @param body the URLSearchParams for the POST request
  * @returns {Promise<any>} the response from Spotify's API
  */
-exports.getToken = function(body) {
+exports.getToken = function (body) {
   const authorization = Buffer.from(
-    `${SPOTIFY_CLIENT_ID}:${SPOTIFY_CLIENT_SECRET}`
+    `${SPOTIFY_CLIENT_ID}:${SPOTIFY_CLIENT_SECRET}`,
   ).toString('base64');
 
   return fetch('https://accounts.spotify.com/api/token', {
     method: 'POST',
     body: body.toString(),
-    headers: {
-      Authorization: `Basic ${authorization}`,
-      'Content-Type': 'application/x-www-form-urlencoded',
+    headers: { 'Authorization': `Basic ${authorization}`, 'Content-Type': 'application/x-www-form-urlencoded' },
+  }).then(response => response.json());
+};
+
+exports.shuffle = function (accessToken, state) {
+  return fetchAndReturnJson(`${SPOTIFY_USER_SHUFFLE_PLAYBACK_URL}?state=${state}`, 'PUT', accessToken);
+};
+
+exports.previousTrack = function (accessToken) {
+  return fetchAndReturnJson(SPOTIFY_USER_PREVIOUS_TRACK_URL, 'POST', accessToken);
+};
+
+exports.play = function (accessToken) {
+  return fetchAndReturnJson(SPOTIFY_USER_PLAY_PLAYBACK_URL, 'PUT', accessToken);
+};
+
+exports.pause = function (accessToken) {
+  return fetchAndReturnJson(SPOTIFY_USER_PAUSE_PLAYBACK_URL, 'PUT', accessToken);
+};
+
+exports.nextTrack = function (accessToken) {
+  return fetchAndReturnJson(SPOTIFY_USER_NEXT_TRACK_URL, 'POST', accessToken);
+};
+
+exports.addTrackToPlaylist = function (accessToken, playlistId, uri) {
+  const url = `${SPOTIFY_PLAYLISTS_ENDPOINT_URL}/${playlistId}/tracks?uris=${encodeURIComponent(uri)}`;
+
+  return fetchAndReturnJson(url, 'POST', accessToken);
+};
+
+exports.addTrackToLibrary = function (accessToken, uri) {
+  const trackId = uri.split(':').pop();
+  const url = `${SPOTIFY_USER_TRACKS_URL}?ids=${trackId}`;
+
+  return fetchAndReturnJson(url, 'PUT', accessToken);
+};
+
+// Pure data retrieval:
+
+exports.getCurrentUser = function (accessToken) {
+  return fetchAndReturnJson(SPOTIFY_USER_ENDPOINT_URL, 'GET', accessToken);
+};
+
+exports.getCurrentPlayback = function (accessToken) {
+  return fetchAndReturnJson(SPOTIFY_USER_CURRENT_PLAYBACK_URL, 'GET', accessToken);
+};
+
+exports.getPlaylists = function (accessToken) {
+  const url = `${SPOTIFY_USER_PLAYLISTS_URL}?limit=${MAX_PLAYLISTS_COUNT}`;
+  return fetchAndReturnJson(url, 'GET', accessToken).then(json => {
+    // Grab all paginated endpoints if there's more than one page.
+
+    const paginatedEndpoints = determinePaginatedPlaylistUrls(json.total);
+    if (!paginatedEndpoints) {
+      return json.items;
     }
+
+    // Fetch all playlists in a single array and return.
+
+    const pageResults = paginatedEndpoints.map(endpoint => fetchAndReturnJson(endpoint, 'GET', accessToken));
+    return Promise.all(pageResults).then(data => data.map(response => response.items).reduce(
+      (result, item) => result.concat(item), []),
+    )
   }).then(
-    res => res.json()
+    allPlaylists => allPlaylists.filter(playlist => playlist["collaborative"] || isPlaylistFromCurrentUser(playlist))
   );
 };
 
-exports.shuffle = function(accessToken, state) {  
-  return fetch(`https://api.spotify.com/v1/me/player/shuffle?state=${state}`, {
-    method: 'PUT',
-    headers: { 'Authorization': `Bearer ${accessToken}` }
+// Helper functions:
+
+function determinePaginatedPlaylistUrls(totalPlaylistCount) {
+  const pagesCount = Math.ceil(totalPlaylistCount / MAX_PLAYLISTS_COUNT);
+
+  // Don't bother figuring out additional needed pages if one is enough.
+
+  if (pagesCount === 1) {
+    return null;
+  }
+
+  // Discover all endpoints for the page count required.
+
+  const pageRange = Array.from(Array(pagesCount).keys());
+  return pageRange.map(
+    (number) => {
+      const offset = MAX_PLAYLISTS_COUNT * number;
+
+      return `${SPOTIFY_USER_PLAYLISTS_URL}?offset=${offset}&limit=${MAX_PLAYLISTS_COUNT}`;
+    }
+  );
+}
+
+/**
+ * Simply fetch the provided URL with the method and access token. Return the JSON response as a {@link Promise}.
+ *
+ * If the response is successful with no body, an empty JSON object is returned instead.
+ *
+ * @param url the URL to GET
+ * @param method the HTTP method
+ * @param accessToken the access token for the authenticated user
+ * @returns {Promise<any>} a JSON response from the URL after a request
+ */
+async function fetchAndReturnJson(url, method, accessToken) {
+  return fetch(url, { method: method, headers: { 'Authorization': `Bearer ${accessToken}` } }).then(
+    async response => {
+      return response.json().catch((reason) => {
+        if (response.ok) {
+          return {};
+        }
+
+        throw reason;
+      });
+    }
+  ).catch((reason) => {
+    console.error(reason);
   });
-};
+}
 
-exports.nextTrack = function(accessToken) {
-  return fetch('https://api.spotify.com/v1/me/player/next', {
-    method: 'POST',
-    headers: { 'Authorization': `Bearer ${accessToken}` }
-  });
-};
-
-exports.previousTrack = function(accessToken) {
-  return fetch('https://api.spotify.com/v1/me/player/previous', {
-    method: 'POST',
-    headers: { 'Authorization': `Bearer ${accessToken}` }
-  });
-};
-
-exports.play = function(accessToken) {
-  return fetch('https://api.spotify.com/v1/me/player/play', {
-    method: 'PUT',
-    headers: { 'Authorization': `Bearer ${accessToken}` }
-  });
-};
-
-exports.pause = function(accessToken) {
-  return fetch('https://api.spotify.com/v1/me/player/pause', {
-    method: 'PUT',
-    headers: { 'Authorization': `Bearer ${accessToken}` }
-  });
-};
-
-exports.getPlaylists = function(accessToken) {
-  const limit = 50;
-  const fetchOptions = {
-    method: 'GET',
-    headers: { 'Authorization': `Bearer ${accessToken}` }
-  };
-
-  return fetch(`https://api.spotify.com/v1/me/playlists?limit=${limit}`, fetchOptions)
-    .then(res => res.json())
-    .then(json => {
-      const numberOfRequests = Math.ceil(json.total/limit);
-      if(numberOfRequests === 1) return json.items;
-
-      const endpoints = [...Array(numberOfRequests)].map((_, request) => `https://api.spotify.com/v1/me/playlists?offset=${limit * request}&limit=${limit}`);
-      return Promise.all(endpoints.map(endpoint => fetch(endpoint, fetchOptions).then(res => res.json())))
-        .then(data => data.map(res => res.items).reduce((result, item) => result.concat(item), []));
-    })
-    .then(data => data.filter(playlist => playlist.collaborative || isPlaylistFromCurrentUser(playlist)));
-};
-
-exports.addTrackToPlaylist = function(accessToken, playlistId, uri) {
-  return fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks?uris=${encodeURIComponent(uri)}`, {
-    method: 'POST',
-    headers: { 'Authorization': `Bearer ${accessToken}` }
-  })
-    .then(res => res.json());
-};
-
-exports.addTrackToLibrary = function(accessToken, uri) {
-  const id = uri.split(':').pop();
-  return fetch(`https://api.spotify.com/v1/me/tracks?ids=${id}`, {
-    method: 'PUT',
-    headers: { 'Authorization': `Bearer ${accessToken}` }
-  });
-};
-
-exports.getCurrentUser = function(accessToken) {
-  return fetch('https://api.spotify.com/v1/me', {
-    method: 'GET',
-    headers: { 'Authorization': `Bearer ${accessToken}` }
-  })
-    .then(res => res.json());
-};
-
+/**
+ * @param playlist the playlist to check
+ * @returns {boolean} whether the given playlist belongs to the logged-in user
+ */
 function isPlaylistFromCurrentUser(playlist) {
   return playlist.owner.uri === localStorage.get('userUri');
 }
