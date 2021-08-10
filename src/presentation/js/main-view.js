@@ -1,6 +1,8 @@
 'use strict';
+
 const { ipcRenderer } = require('electron');
 const currentWindow = require('@electron/remote').getCurrentWindow();
+
 let currentUriOfAddPage;
 
 ipcRenderer.on('currentPlaybackReceived', (event, message) => setPlayer(message));
@@ -16,7 +18,7 @@ currentWindow.on('hide', () => {
 function getPlayerTemplate(data) {
   return `
     <div class="spacement-bottom-md">
-      <img src="${data.albumImageSrc}" class="album-cover">
+      <img alt="Album art fetched from Spotify." src="${data.albumImageSrc}" class="album-cover">
     </div>
     <p class="spacement-bottom-sm music-name">${data.musicName}</p>
     <p class="spacement-bottom-sm album-name">${data.albumName}</p>
@@ -25,11 +27,21 @@ function getPlayerTemplate(data) {
       <div id="progress-bar" class="progress-bar"></div>
     </div>
     <div class="player-controls">
-      <div id="shuffle-button" class="random-icon-container"><i class="fas fa-random random-icon ${data.shuffleState ? 'random-icon--active' : 'random-icon--inactive'}"></i></div>
-      <div id="previous-button" class="control-icon-container"><i class="fas fa-step-backward control-icon"></i></div>
-      <div id="play-button" class="play-container"><i class="fas ${data.isPlaying ? 'fa-pause pause-icon' : 'fa-play play-icon'}"></i></div>
-      <div id="next-button" class="control-icon-container"><i class="fas fa-step-forward control-icon"></i></div>
-      <div id="add-button" class="add-icon-container"><i class="fas fa-plus control-icon"></i></div>
+      <div id="shuffle-button" class="random-icon-container">
+        <i class="fas fa-random random-icon ${data.shuffleState ? 'random-icon--active' : 'random-icon--inactive'}"></i>
+      </div>
+      <div id="previous-button" class="control-icon-container">
+        <i class="fas fa-step-backward control-icon"></i>
+      </div>
+      <div id="play-button" class="play-container">
+        <i class="fas ${data.isPlaying ? 'fa-pause pause-icon' : 'fa-play play-icon'}"></i>
+      </div>
+      <div id="next-button" class="control-icon-container">
+        <i class="fas fa-step-forward control-icon"></i>
+      </div>
+      <div id="add-button" class="add-icon-container">
+        <i class="fas fa-plus control-icon"></i>
+      </div>
     </div>
   `;
 }

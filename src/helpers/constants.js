@@ -6,7 +6,7 @@ module.exports = {
   SPOTIFY_SCOPES: env.SPOTIFY_SCOPES,
   REDIRECT_URI: env.REDIRECT_URI,
   APP_NAME: 'Now Playing',
-  FEEDBACK_LINK: 'https://github.com/teaminkling/mac-spotify-np/issues/new',
+  FEEDBACK_LINK: 'https://github.com/teaminkling/mac-spotify-np/issues/new?assignees=&labels=enhancement&template=feature-request.md&title=',
   MAIN_WINDOW_WIDTH: 250,
   MAIN_WINDOW_HEIGHT: 150,
   UPDATER_WINDOW_WIDTH: 500,

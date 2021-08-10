@@ -78,30 +78,22 @@ function manageTrayRightClick(tray) {
 
   const trayMenuTemplate = [
     {
-      label: APP_NAME,
-      enabled: false
-    },
-    {
       label: 'Open at Login',
       type: 'checkbox',
       checked: openAtLogin,
       click: () => app.setLoginItemSettings({ openAtLogin: !openAtLogin })
     },
     {
-      label: 'Give feedback!',
-      click: () => shell.openExternal(FEEDBACK_LINK)
-    },
-    {
       type: 'separator'
     },
     {
-      label: 'Activate Notifications',  
+      label: 'Show Notifications',
       type: 'checkbox',
       checked: activateNotifications,
       click: () => localStorage.save('activateNotifications', !localStorage.get('activateNotifications'))
     },
     {
-      label: 'Show song in menu bar',  
+      label: 'Show Song on Tray',
       type: 'checkbox',
       checked: songMenubar,
       click: function() {
@@ -113,19 +105,38 @@ function manageTrayRightClick(tray) {
       type: 'separator'
     },
     {
+      label: 'Give feedback!',
+      click: () => shell.openExternal(FEEDBACK_LINK)
+    },
+    {
+      type: 'separator'
+    },
+    // {
+    //   label: 'Log Out',
+    //   click: function() {
+    //     window.setClosable(true);
+    //     app.quit();
+    //   }
+    // },
+    {
       label: 'Quit',
       click: function() {
         window.setClosable(true);
         app.quit();
       }
-    }
+    },
   ];
   const trayMenu = Menu.buildFromTemplate(trayMenuTemplate);
 
   tray.popUpContextMenu(trayMenu);
 }
 
-ipcMain.on('fixHeight', (event, height) => window.setSize(MAIN_WINDOW_WIDTH, height, true));
+ipcMain.on(
+  'fixHeight',
+  (event, height) => window.setSize(MAIN_WINDOW_WIDTH, height, true),
+);
+
+// Hide the dock if it is still visible. Without this, opening on the current workspace instead goes to a desktop.
 
 if (app.dock) {
   app.dock.hide();
