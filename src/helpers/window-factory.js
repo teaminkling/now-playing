@@ -1,6 +1,6 @@
 'use strict';
-require('../sentry');
-const { BrowserWindow, app } = require('electron');
+
+const { BrowserWindow } = require('electron');
 const { APP_NAME, MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT, UPDATER_WINDOW_HEIGHT, UPDATER_WINDOW_WIDTH } = require('./constants');
 
 function getAuth(options) {
@@ -11,7 +11,6 @@ function getAuth(options) {
     webPreferences: {
       contextIsolation: false,
       nodeIntegration: false,
-      preload: `${app.getAppPath()}/src/sentry.js`,
       enableRemoteModule: false,
     }
   });
@@ -34,7 +33,6 @@ function getMain() {
     webPreferences: {
       contextIsolation: false,
       nodeIntegration: true,
-      preload: `${app.getAppPath()}/src/sentry.js`,
       enableRemoteModule: true,
     }
   });
@@ -50,7 +48,6 @@ function getUpdater(options) {
     webPreferences: {
       contextIsolation: false,
       nodeIntegration: true,
-      preload: `${app.getAppPath()}/src/sentry.js`,
       enableRemoteModule: false,
     }
   });

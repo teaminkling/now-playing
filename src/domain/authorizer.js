@@ -1,11 +1,11 @@
 'use strict';
-require('../sentry');
+
 const localStorage = require('../data-source/local-storage');
 const spotifyDataSource = require('../data-source/spotify-datasource');
 const subjectFactory = require('../helpers/subject-factory');
 const errorReporter = require('../helpers/error-reporter');
 const windowFactory = require('../helpers/window-factory');
-const sentryConfig = require('../helpers/sentry-config');
+
 const { SPOTIFY_SCOPES, REDIRECT_URI, SPOTIFY_CLIENT_ID } = require('../helpers/constants');
 
 let authorizing;
@@ -34,7 +34,6 @@ exports.execute = function(parentWindow) {
       .then(user => {
         if(user.uri) {
           localStorage.save('userUri', user.uri);
-          sentryConfig.execute(user);
           authorizing = false;
         } else {
           subject.emit('errorCurrentUser', null);
