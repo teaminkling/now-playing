@@ -1,5 +1,5 @@
 'use strict';
-require('../sentry');
+
 const semver = require('semver');
 const { app, ipcMain } = require('electron');
 const githubDatasource = require('../data-source/github-datasource');

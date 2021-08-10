@@ -25,7 +25,6 @@
   },
   "dependencies": {
     "@electron/remote": "^1.2.1",
-    "@sentry/electron": "0.17.4",
     "electron-fetch": "^1.7.3",
     "nconf": "^0.11.3",
     "node-notifier": "^8.0.2",

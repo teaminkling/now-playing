@@ -5,7 +5,6 @@ module.exports = {
   SPOTIFY_CLIENT_ID: env.SPOTIFY_CLIENT_ID,
   SPOTIFY_SCOPES: env.SPOTIFY_SCOPES,
   REDIRECT_URI: env.REDIRECT_URI,
-  SENTRY_DSN: env.SENTRY_DSN,
   APP_NAME: 'Now Playing',
   FEEDBACK_LINK: 'https://github.com/teaminkling/mac-spotify-np/issues/new',
   MAIN_WINDOW_WIDTH: 250,

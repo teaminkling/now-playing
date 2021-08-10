@@ -1,5 +1,4 @@
 'use strict';
-require('../sentry');
 
 exports.get = function() {
   const listeners = {};
