@@ -7,7 +7,7 @@ const authorizer = require('./domain/authorizer');
 const updater = require('./domain/updater');
 const windowFactory = require('./helpers/window-factory');
 const localStorage = require('./data-source/local-storage');
-const { APP_NAME, MAIN_WINDOW_WIDTH, FEEDBACK_LINK } = require('./helpers/constants');
+const { MAIN_WINDOW_WIDTH, FEEDBACK_LINK } = require('./helpers/constants');
 
 let window;
 let tray;

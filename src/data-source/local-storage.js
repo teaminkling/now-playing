@@ -15,5 +15,6 @@ exports.save = function(key, value) {
 
 exports.get = function(key) {
   nconf.load();
+
   return nconf.get(key);
 };

@@ -11,18 +11,27 @@ const { SPOTIFY_SCOPES, REDIRECT_URI, SPOTIFY_CLIENT_ID } = require('../helpers/
 let authorizing;
 
 exports.execute = function(parentWindow) {
-  if(authorizing) return;
+  // Don't allow double authorization:
+
+  if (authorizing) {
+    return;
+  }
+
   authorizing = true;
 
+  // Handle signals.
+
   const subject = subjectFactory.get();
+
   subject.on('errorCurrentUser', handleErrorCurrentUser);
   subject.on('authCode', getTokenFromAuthCode);
   subject.on('token', getCurrentUser);
   subject.on('errorTokenFromRefreshToken', getAuthorization);
   subject.on('errorTokenFromAuthCode', getAuthorization);
 
-  const accessToken = localStorage.get('accessToken');
+  // If the user is already authenticated,
 
+  const accessToken = localStorage.get('accessToken');
   if(accessToken && areSavedScopesEnough()) {
     getCurrentUser(accessToken);
   } else {
@@ -65,7 +74,7 @@ exports.execute = function(parentWindow) {
 
       if(isDomainUrlRedirectUri(url.split('?')[0]) && code) {
         spotifyAuthWindow.destroy();
-        
+
         const authCode = code.split('#')[0];
         subject.emit('authCode', authCode);
       }
@@ -121,7 +130,9 @@ function isDomainUrlRedirectUri(domainUrl) {
 
 function areSavedScopesEnough() {
   const savedScopes = localStorage.get('authorizedScopes');
-  if(!savedScopes) return false;
+  if (!savedScopes) {
+    return false;
+  }
 
   const savedScopesArray = savedScopes.split(' ');
   const appScopesArray = SPOTIFY_SCOPES.split(' ');
