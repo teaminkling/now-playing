@@ -9,6 +9,8 @@ exports.emit = function(errorMessageKey, error) {
     extra: { error }
   };
 
+  // Log to console only if not in production.
+
   if (!isProduction) {
     console.log(event);
   }

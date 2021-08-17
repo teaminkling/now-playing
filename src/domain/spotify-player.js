@@ -1,60 +1,58 @@
-'use strict';
+"use strict";
 
-const { ipcMain } = require('electron');
-const localStorage = require('../data-source/local-storage');
-const spotifyDataSource = require('../data-source/spotify-datasource');
-const mappers = require('../helpers/mappers');
-const errorReporter = require('../helpers/error-reporter');
-const authorizer = require('./authorizer');
-const { SONG_TITLE_MAX_LENGTH, UPDATE_PERIOD } = require('../helpers/constants');
-const notifier = require('node-notifier');
+const { ipcMain } = require("electron");
+const localStorage = require("../data/local");
+const spotifyDataSource = require("../data/playback");
+const mappers = require("../helpers/mappers");
+const errorReporter = require("../helpers/error-reporter");
+const authorizer = require("../data/authorization");
+const { SONG_TITLE_MAX_LENGTH, UPDATE_PERIOD } = require("../helpers/constants");
+const notifier = require("node-notifier");
 
-ipcMain.on('shuffleButtonClicked', () => spotifyDataSource.shuffle(localStorage.get('accessToken'), true));
-ipcMain.on('unshuffleButtonClicked', () => spotifyDataSource.shuffle(localStorage.get('accessToken'), false));
-ipcMain.on('previousButtonClicked', () => spotifyDataSource.previousTrack(localStorage.get('accessToken')));
-ipcMain.on('nextButtonClicked', () => spotifyDataSource.nextTrack(localStorage.get('accessToken')));
-ipcMain.on('pauseButtonClicked', () => spotifyDataSource.pause(localStorage.get('accessToken')));
-ipcMain.on('playButtonClicked', () => spotifyDataSource.play(localStorage.get('accessToken')));
-ipcMain.on('addToLibraryClicked', (event, uri) => {
-  const accessToken = localStorage.get('accessToken');
+ipcMain.on("shuffleButtonClicked", () => spotifyDataSource.shuffle(localStorage.get("accessToken"), true));
+ipcMain.on("unshuffleButtonClicked", () => spotifyDataSource.shuffle(localStorage.get("accessToken"), false));
+ipcMain.on("previousButtonClicked", () => spotifyDataSource.previousTrack(localStorage.get("accessToken")));
+ipcMain.on("nextButtonClicked", () => spotifyDataSource.nextTrack(localStorage.get("accessToken")));
+ipcMain.on("pauseButtonClicked", () => spotifyDataSource.pause(localStorage.get("accessToken")));
+ipcMain.on("playButtonClicked", () => spotifyDataSource.play(localStorage.get("accessToken")));
+ipcMain.on("addToLibraryClicked", (event, uri) => {
+  const accessToken = localStorage.get("accessToken");
   spotifyDataSource.addTrackToLibrary(accessToken, uri);
 });
 
 let currentPlaybackURI;
 
 exports.execute = function(parentWindow, tray) {
-  ipcMain.on('addToPlaylistButtonClicked', handleAddToPlaylistButtonClicked);
-  ipcMain.on('playlistSelected', (event, data) => handlePlaylistSelected(data));
+  ipcMain.on("addToPlaylistButtonClicked", handleAddToPlaylistButtonClicked);
+  ipcMain.on("playlistSelected", (event, data) => handlePlaylistSelected(data));
 
   setInterval(() => getCurrentPlayback(), UPDATE_PERIOD);
 
-  let index = 0;
-  
   function getCurrentPlayback() {
-    const accessToken = localStorage.get('accessToken');
+    const accessToken = localStorage.get("accessToken");
 
     spotifyDataSource.getCurrentPlayback(accessToken)
       .then(json => {
-        if(json.item) {
+        if (json.item) {
           const mappedData = mappers.currentPlaybackToView(json);
-          if(shouldShowTrackNotification(mappedData)) {
+          if (shouldShowTrackNotification(mappedData)) {
             notifier.notify(
               mappers.notificationData(mappedData), function(error, response, metadata) {
-                const keyExists = Object.prototype.hasOwnProperty.call(metadata, 'activationType');
-                if(keyExists && metadata['activationType'] === 'actionClicked') {
-                  spotifyDataSource.nextTrack(localStorage.get('accessToken'));
+                const keyExists = Object.prototype.hasOwnProperty.call(metadata, "activationType");
+                if (keyExists && metadata["activationType"] === "actionClicked") {
+                  spotifyDataSource.nextTrack(localStorage.get("accessToken")).then();
                 }
               }
             );
           }
-          if(shouldShowSongMenubar()) {
+          if (shouldShowSongMenubar()) {
             /*
              * Note: album name is not included in the tray song display as it is not likely wanted at a glance.
              */
 
             const title = `${mappedData.artistName} - ${mappedData.musicName}`;
 
-            if(title.length <= SONG_TITLE_MAX_LENGTH) {
+            if (title.length <= SONG_TITLE_MAX_LENGTH) {
               tray.setTitle("  " + title);
             } else {
               /* Handle overflow of the title. */
@@ -65,15 +63,16 @@ exports.execute = function(parentWindow, tray) {
             }
           }
           currentPlaybackURI = mappedData.uri;
-          sendToRendererProcess('currentPlaybackReceived', mappedData);
+          sendToRendererProcess("currentPlaybackReceived", mappedData);
         } else {
-          sendToRendererProcess('loading', {});
-          authorizer.execute(parentWindow);
+          sendToRendererProcess("loading", {});
+
+          // FIXME: this part used to be a callback to log in.
         }
       })
       .catch(error => {
-        errorReporter.emit('getCurrentPlayback', error);
-        sendToRendererProcess('noContent');
+        errorReporter.emit("getCurrentPlayback", error);
+        sendToRendererProcess("noContent");
       });
   }
 
@@ -86,28 +85,28 @@ exports.execute = function(parentWindow, tray) {
   }
 
   function shouldShowTrackNotification(data) {
-    return data.currentlyPlayingType === 'track' && didSongChange(data) && localStorage.get('activateNotifications');
+    return data.currentlyPlayingType === "track" && didSongChange(data) && localStorage.get("activateNotifications");
   }
 
   function shouldShowSongMenubar() {
-    return localStorage.get('songMenubar');
+    return localStorage.get("songMenubar") && localStorage.get("accessToken");
   }
 
   function handleAddToPlaylistButtonClicked() {
-    const accessToken = localStorage.get('accessToken');
+    const accessToken = localStorage.get("accessToken");
     spotifyDataSource.getPlaylists(accessToken)
       .then(data => {
         const mappedData = mappers.playlistsToView(data);
-        sendToRendererProcess('playlistsReceived', mappedData);
+        sendToRendererProcess("playlistsReceived", mappedData);
       })
-      .catch(error => errorReporter.emit('getPlaylists', error));
+      .catch(error => errorReporter.emit("getPlaylists", error));
   }
 
   function handlePlaylistSelected(data) {
-    const accessToken = localStorage.get('accessToken');
+    const accessToken = localStorage.get("accessToken");
     const { playlistId, uri } = data;
     spotifyDataSource.addTrackToPlaylist(accessToken, playlistId, uri)
-      .then(response => response.error ? authorizer.execute(parentWindow) : sendToRendererProcess('trackAdded'))
-      .catch(error => errorReporter.emit('addTrackToPlaylist', error));
+      .then(response => response.error ? authorizer.execute(parentWindow) : sendToRendererProcess("trackAdded"))
+      .catch(error => errorReporter.emit("addTrackToPlaylist", error));
   }
 };
