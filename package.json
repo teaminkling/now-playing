@@ -18,17 +18,16 @@
   "license": "MIT",
   "devDependencies": {
     "dotenv": "^10.0.0",
-    "electron": "^13.1.9",
-    "electron-builder": "^22.11.7",
-    "electron-notarize": "^1.1.0",
-    "eslint": "^7.32.0",
-    "xmldom": "github:xmldom/xmldom#0.7.0"
+    "electron": "^13.4.0",
+    "electron-builder": "^22.14.2",
+    "electron-notarize": "^1.1.1",
+    "eslint": "^7.32.0"
   },
   "dependencies": {
-    "@electron/remote": "^1.2.1",
-    "electron-fetch": "^1.7.3",
+    "@electron/remote": "^1.2.2",
+    "electron-fetch": "^1.7.4",
     "nconf": "^0.11.3",
-    "node-notifier": "^8.0.2",
+    "node-notifier": "^10.0.0",
     "semver": "^7.3.5"
   }
 }
