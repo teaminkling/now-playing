@@ -1,4 +1,8 @@
 {
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaVersion": 8
+  },
   "env": {
     "browser": true,
     "commonjs": true,
@@ -34,7 +38,7 @@
     "keyword-spacing": ["error", {
       "overrides": {
         "if": {
-          "after": false
+          "after": true
         },
         "function": {
           "after": false
@@ -123,7 +127,7 @@
     "prefer-const": "error",
     "prefer-numeric-literals": "error",
     "prefer-promise-reject-errors": "error",
-    "quotes": ["error", "single", { "allowTemplateLiterals": true }],
+    "quotes": ["error", "double", { "allowTemplateLiterals": true }],
     "radix": ["error", "as-needed"],
     "require-await": "error",
     "rest-spread-spacing": "error",
