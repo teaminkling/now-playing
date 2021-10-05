@@ -14,8 +14,6 @@ const { authenticate, saveTokenFromAuthCode } = require("./data/authorization");
 
 const { MAIN_WINDOW_WIDTH, FEEDBACK_LINK } = require("./helpers/constants");
 
-const LOGGED_OUT_TRAY_MESSAGE = " Logged Out";
-
 let window;
 let tray;
 
@@ -141,10 +139,6 @@ function manageTrayRightClick(_tray) {
       localStorage.save("accessToken", undefined);
       localStorage.save("refreshToken", undefined);
       localStorage.save("userUri", undefined);
-
-      // The tray title should tell the user exactly how to fix the authentication problem.
-
-      _tray.setTitle(LOGGED_OUT_TRAY_MESSAGE);
     }
   } : {
     label: "Log In with Spotify",
