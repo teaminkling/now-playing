@@ -13,7 +13,7 @@ Now Playing at its heart is a mini-player and native system notifications when r
 
 ![](docs/img/screenshot_1.png)
 
-### Big Sur Expanded Notifications
+### Monterey/Big Sur Expanded Notifications
 
 In Big Sur (and later) you can expand notifications to view the beautiful full-sized album art!
 
@@ -40,8 +40,8 @@ Install dependencies:
 yarn install
 ```
 
-You then [must create and register an app][spotify-app-registration] in the Spotify Developer portal. Rename `.env.
-json.example` (file in the root of this project) to `.env.json` and update values.
+You then [must create and register an app][spotify-app-registration] in the Spotify Developer portal.
+Rename `.env. json.example` (file in the root of this project) to `.env.json` and update values.
 
 To start the app, run:
 
@@ -63,11 +63,19 @@ Thanks to @davicorreiajr's [original project][old-version-repo] on which this ha
 This project uses the [MIT License](LICENSE).
 
 [maintainability-badge]:       https://api.codeclimate.com/v1/badges/87b6080da2e2dce357a2/maintainability
+
 [maintainability-link]:        https://codeclimate.com/github/teaminkling/mac-spotify-np/maintainability
+
 [github-downloads-badge]:      https://img.shields.io/github/downloads/teaminkling/mac-spotify-np/total
+
 [github-latest-release-badge]: https://img.shields.io/github/v/release/teaminkling/mac-spotify-np
+
 [issues]:                      https://github.com/teaminkling/mac-spotify-np/issues
+
 [releases]:                    https://github.com/teaminkling/mac-spotify-np/releases
+
 [latest-release]:              https://github.com/teaminkling/mac-spotify-np/releases/latest
+
 [spotify-app-registration]:    https://developer.spotify.com/documentation/general/guides/app-settings
+
 [old-version-repo]:            https://github.com/davicorreiajr/spotify-now-playing
