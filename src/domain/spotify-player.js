@@ -27,9 +27,24 @@ exports.execute = function (parentWindow, tray) {
   ipcMain.on("addToPlaylistButtonClicked", handleAddToPlaylistButtonClicked);
   ipcMain.on("playlistSelected", (event, data) => handlePlaylistSelected(data));
 
-  setInterval(() => getCurrentPlayback(), UPDATE_PERIOD);
+  // Spotify does not provide a webhook to third-party developers for things like song change. As a result, we have
+  // no choice but to make a HTTP request every single time to get song playback when not logged out.
+
+  setInterval(() => {
+    // Don't bother to get the track if we've got no hope of being logged in.
+
+    if (localStorage.get("userUri")) {
+      getCurrentPlayback();
+    } else {
+      // Change the renderer to show the login prompt rather than a loading symbol.
+
+      sendToRendererProcess("login", {});
+    }
+  }, UPDATE_PERIOD);
 
   function getCurrentPlayback() {
+    // Use the Spotify API auth information to try to get the current playback.
+
     const accessToken = localStorage.get("accessToken");
 
     spotifyDataSource.getCurrentPlayback(accessToken)
@@ -46,35 +61,37 @@ exports.execute = function (parentWindow, tray) {
               }
             );
           }
+
           if (shouldShowSongMenubar()) {
-            /*
-             * Note: album name is not included in the tray song display as it is not likely wanted at a glance.
-             */
+            // Note: album name is not included in the tray song display as it is not likely wanted at a glance.
 
             const title = `${mappedData.artistName} - ${mappedData.musicName}`;
 
             if (title.length <= SONG_TITLE_MAX_LENGTH) {
               tray.setTitle("  " + title);
             } else {
-              /* Handle overflow of the title. */
+              // Handle overflow of the title.
 
               tray.setTitle(
                 "  " + title.substring(0, (SONG_TITLE_MAX_LENGTH - 1)) + "..."
               );
             }
           }
+
           currentPlaybackURI = mappedData.uri;
+
           sendToRendererProcess("currentPlaybackReceived", mappedData);
         } else {
           sendToRendererProcess("loading", {});
 
-          // TODO: This is a little less nice than it could be. Code cleanup would be valuable here.
+          // Attempt to use a refresh token to login. If that doesn't work, an auth force might be required.
 
           authenticate();
         }
       })
       .catch(error => {
         errorReporter.emit("getCurrentPlayback", error, true);
+
         sendToRendererProcess("noContent");
       });
   }

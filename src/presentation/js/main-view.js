@@ -7,6 +7,7 @@ let currentUriOfAddPage;
 
 ipcRenderer.on("currentPlaybackReceived", (event, message) => setPlayer(message));
 ipcRenderer.on("loading", () => setLoader());
+ipcRenderer.on("login", () => setLoginPrompt());
 ipcRenderer.on("noContent", () => setNoContent());
 ipcRenderer.on("playlistsReceived", (event, playlists) => openPlaylistsContainer(playlists));
 ipcRenderer.on("trackAdded", () => closePlaylistsContainer());
@@ -88,6 +89,7 @@ function setPlayer(data) {
   hide("loader-container");
   hide("no-content-container");
   show("player-container");
+  hide("login-prompt");
 
   const playerContainer = document.getElementById("player-container");
   playerContainer.innerHTML = getPlayerTemplate(data);
@@ -101,6 +103,8 @@ function setLoader() {
   hide("add-container");
   hide("no-content-container");
   show("loader-container");
+  hide("login-prompt");
+
   fixWindowHeight();
 }
 
@@ -109,6 +113,21 @@ function setNoContent() {
   hide("player-container");
   hide("add-container");
   show("no-content-container");
+  hide("login-prompt");
+
+  fixWindowHeight();
+}
+
+/**
+ * Show a prompt for users to log in.
+ */
+function setLoginPrompt() {
+  hide("loader-container");
+  hide("player-container");
+  hide("add-container");
+  hide("no-content-container");
+  show("login-prompt");
+
   fixWindowHeight();
 }
 
@@ -119,7 +138,6 @@ function setProgressBar(currentProgress, musicDuration) {
 }
 
 function setPlayerButtonsListeners(data) {
-  
   document.getElementById("previous-button")
     .addEventListener("click", () => ipcRenderer.send("previousButtonClicked"));
 
@@ -136,7 +154,7 @@ function setPlayerButtonsListeners(data) {
     .addEventListener("click", () => {
       const addContainer = document.getElementById("add-container");
       addContainer.innerHTML = getAddTemplate();
-      
+
       currentUriOfAddPage = data.uri;
       setAddButtonsListeners();
 
@@ -159,7 +177,7 @@ function setAddButtonsListeners() {
       show("player-container");
       fixWindowHeight();
     });
-  
+
   document.getElementById("add-save-button")
     .addEventListener("click", () => ipcRenderer.send("addToLibraryClicked", currentUriOfAddPage));
 
@@ -207,7 +225,7 @@ function setPlaylistsListeners(playlists) {
 function toggleAddPlaylistIcon() {
   const playlistsContainer = document.getElementById("playlists-container");
   const addPlaylistIcon = document.getElementById("add-playlist-icon");
-  
+
   if (playlistsContainer.style.display === "none") {
     addPlaylistIcon.classList.remove("fa-chevron-right");
     addPlaylistIcon.classList.add("fa-chevron-down");

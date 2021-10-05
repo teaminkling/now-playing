@@ -1,10 +1,10 @@
-'use strict';
+"use strict";
 
-const isProduction = require('electron').app.isPackaged;
-const { ERROR_MESSAGES } = require('../helpers/constants');
-const { authenticate } = require('../data/authorization');
+const isProduction = require("electron").app.isPackaged;
+const { ERROR_MESSAGES } = require("../helpers/constants");
+const { authenticate } = require("../data/authorization");
 
-exports.emit = function(errorMessageKey, error, doReauthenticate = false) {
+exports.emit = function (errorMessageKey, error, doReauthenticate = false) {
   const event = {
     message: ERROR_MESSAGES[errorMessageKey] || errorMessageKey,
     extra: { error }

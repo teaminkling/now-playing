@@ -90,7 +90,7 @@ const MAX_PLAYLISTS_COUNT = 50;
  * @param body the URLSearchParams for the POST request
  * @returns {Promise<any>} the response from Spotify's API
  */
-exports.getToken = function(body) {
+exports.getToken = function (body) {
   const authorization = Buffer.from(
     `${SPOTIFY_CLIENT_ID}:${SPOTIFY_CLIENT_SECRET}`
   ).toString("base64");
@@ -102,33 +102,33 @@ exports.getToken = function(body) {
   }).then(response => response.json());
 };
 
-exports.shuffle = function(accessToken, state) {
+exports.shuffle = function (accessToken, state) {
   return fetchAndReturnJson(`${SPOTIFY_USER_SHUFFLE_PLAYBACK_URL}?state=${state}`, "PUT", accessToken);
 };
 
-exports.previousTrack = function(accessToken) {
+exports.previousTrack = function (accessToken) {
   return fetchAndReturnJson(SPOTIFY_USER_PREVIOUS_TRACK_URL, "POST", accessToken);
 };
 
-exports.play = function(accessToken) {
+exports.play = function (accessToken) {
   return fetchAndReturnJson(SPOTIFY_USER_PLAY_PLAYBACK_URL, "PUT", accessToken);
 };
 
-exports.pause = function(accessToken) {
+exports.pause = function (accessToken) {
   return fetchAndReturnJson(SPOTIFY_USER_PAUSE_PLAYBACK_URL, "PUT", accessToken);
 };
 
-exports.nextTrack = function(accessToken) {
+exports.nextTrack = function (accessToken) {
   return fetchAndReturnJson(SPOTIFY_USER_NEXT_TRACK_URL, "POST", accessToken);
 };
 
-exports.addTrackToPlaylist = function(accessToken, playlistId, uri) {
+exports.addTrackToPlaylist = function (accessToken, playlistId, uri) {
   const url = `${SPOTIFY_PLAYLISTS_ENDPOINT_URL}/${playlistId}/tracks?uris=${encodeURIComponent(uri)}`;
 
   return fetchAndReturnJson(url, "POST", accessToken);
 };
 
-exports.addTrackToLibrary = function(accessToken, uri) {
+exports.addTrackToLibrary = function (accessToken, uri) {
   const trackId = uri.split(":").pop();
   const url = `${SPOTIFY_USER_TRACKS_URL}?ids=${trackId}`;
 
@@ -137,15 +137,17 @@ exports.addTrackToLibrary = function(accessToken, uri) {
 
 // Pure data retrieval:
 
-exports.getCurrentUser = function(accessToken) {
+exports.getCurrentUser = function (accessToken) {
   return fetchAndReturnJson(SPOTIFY_USER_ENDPOINT_URL, "GET", accessToken);
 };
 
-exports.getCurrentPlayback = function(accessToken) {
+exports.getCurrentPlayback = function (accessToken) {
   return fetchAndReturnJson(SPOTIFY_USER_CURRENT_PLAYBACK_URL, "GET", accessToken);
 };
 
-exports.getPlaylists = function(accessToken) {
+// FIXME: Call on login.
+
+exports.getPlaylists = function (accessToken) {
   const url = `${SPOTIFY_USER_PLAYLISTS_URL}?limit=${MAX_PLAYLISTS_COUNT}`;
   return fetchAndReturnJson(url, "GET", accessToken).then(json => {
     // Grab all paginated endpoints if there's more than one page.

@@ -4,29 +4,42 @@
   <meta charset="UTF-8">
   <title>Now Playing</title>
   <link href="../css/index.css" rel="stylesheet" type="text/css"/>
-  <link rel="stylesheet"
+  <link crossorigin="anonymous"
         href="https://use.fontawesome.com/releases/v5.5.0/css/solid.css"
         integrity="sha384-rdyFrfAIC05c5ph7BKz3l5NG5yEottvO/DQ0dCrwD8gzeQDjYBHNr1ucUpQuljos"
-        crossorigin="anonymous"
+        rel="stylesheet"
   >
-  <link rel="stylesheet"
+  <link crossorigin="anonymous"
         href="https://use.fontawesome.com/releases/v5.5.0/css/fontawesome.css"
         integrity="sha384-u5J7JghGz0qUrmEsWzBQkfvc8nK3fUT7DCaQzNQ+q4oEXhGSx+P2OqjWsfIRB8QT"
-        crossorigin="anonymous"
+        rel="stylesheet"
   >
 </head>
 <body>
+
 <div id="player-container"></div>
+
 <div id="loader-container">
   <div class="loader"></div>
 </div>
+
 <div id="add-container"></div>
+
 <div id="no-content-container" style="display: none">
   <h1>Nothing is playing!</h1>
   <p>
     If this issue persists, please restart Spotify.
   </p>
 </div>
+
+<div id="login-prompt" style="display: none">
+  <h1>Logged out!</h1>
+  <p>
+    Please log in through the context menu to use Now Playing.
+  </p>
+</div>
+
 <script src="../js/main-view.js"></script>
+
 </body>
 </html>

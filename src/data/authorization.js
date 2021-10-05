@@ -86,6 +86,8 @@ exports.saveTokenFromAuthCode = authCode => {
         localStorage.save("accessToken", json["access_token"]);
         localStorage.save("refreshToken", json["refresh_token"]);
         localStorage.save("authorizedScopes", json["scope"]);
+
+        exports.authenticate();
       } else {
         // If the retrieval didn't work, remove all local storage information.
 
