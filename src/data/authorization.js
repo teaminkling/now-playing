@@ -17,6 +17,8 @@ const { SPOTIFY_SCOPES, REDIRECT_URI, SPOTIFY_CLIENT_ID } = require("../helpers/
  */
 const SPOTIFY_AUTHORIZE_ENDPOINT_URL = "https://accounts.spotify.com/en/authorize";
 
+let hasAttemptedBrowserLogin = false;
+
 /**
  * Save the current user in local storage, if successful.
  *
@@ -28,10 +30,12 @@ const SPOTIFY_AUTHORIZE_ENDPOINT_URL = "https://accounts.spotify.com/en/authoriz
  *
  * @return boolean whether the authentication was successful/is waiting for something else (i.e., shouldn't be re-run)
  */
-exports.authenticate = () => {
+exports.authenticate = (force = false) => {
   const accessToken = localStorage.get("accessToken");
   if (!accessToken || !areSavedScopesEnough()) {
-    openOauth2WindowInDefaultBrowser();
+    if (!hasAttemptedBrowserLogin || force) {
+      openOauth2WindowInDefaultBrowser();
+    }
 
     // When receiving the callback, this should re-call the authentication method.
 
@@ -43,6 +47,10 @@ exports.authenticate = () => {
 
     if (user.uri) {
       localStorage.save("userUri", user.uri);
+
+      // This could happen on regular login with a saved value, so we don't retry on manual logout.
+
+      hasAttemptedBrowserLogin = true;
 
       return true;
     }
@@ -105,6 +113,10 @@ const openOauth2WindowInDefaultBrowser = () => {
   );
 
   electron.shell.openExternal(url).then();
+
+  // Prevent loop of auth windows. The user will need to retry logging in manually if the auth request is dismissed.
+
+  hasAttemptedBrowserLogin = true;
 };
 
 /**

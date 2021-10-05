@@ -60,7 +60,7 @@ function setTrayListeners(tray) {
   tray.on("click", (event, bounds) => {
     const windowWidth = window.getSize()[0];
     const trayWidth = bounds.width;
-    const x = Math.round(bounds.x - windowWidth/2 + trayWidth/2);
+    const x = Math.round(bounds.x - windowWidth / 2 + trayWidth / 2);
     const y = bounds.y;
     window.setPosition(x, y);
     window.isVisible() ? hideAllWindows() : showAllWindows();
@@ -91,7 +91,7 @@ function showAllWindows() {
 }
 
 function manageTrayRightClick(_tray) {
-  const openAtLogin = app.getLoginItemSettings().openAtLogin; 
+  const openAtLogin = app.getLoginItemSettings().openAtLogin;
   const activateNotifications = localStorage.get("activateNotifications");
   const songMenubar = localStorage.get("songMenubar");
   window.hide();
@@ -118,7 +118,7 @@ function manageTrayRightClick(_tray) {
     label: "Show Song on Tray",
     type: "checkbox",
     checked: songMenubar,
-    click: function() {
+    click: function () {
       localStorage.save("songMenubar", !songMenubar);
 
       if (songMenubar) {
@@ -135,7 +135,7 @@ function manageTrayRightClick(_tray) {
   const currentAccessToken = localStorage.get("accessToken");
   const logInOutPayload = currentAccessToken ? {
     label: "Log Out",
-    click: function() {
+    click: function () {
       // This will force a re-authenticate with Spotify.
 
       localStorage.save("accessToken", undefined);
@@ -148,8 +148,8 @@ function manageTrayRightClick(_tray) {
     }
   } : {
     label: "Log In with Spotify",
-    click: function() {
-      authenticate();
+    click: function () {
+      authenticate(true);
 
       // Either neutralise the title or prepare for it to be re-written.
 
@@ -159,7 +159,7 @@ function manageTrayRightClick(_tray) {
 
   const quitPayload = {
     label: "Quit",
-    click: function() {
+    click: function () {
       window.setClosable(true);
 
       app.quit();
