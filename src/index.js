@@ -139,6 +139,10 @@ function manageTrayRightClick(_tray) {
       localStorage.save("accessToken", undefined);
       localStorage.save("refreshToken", undefined);
       localStorage.save("userUri", undefined);
+
+      // Neutralise the title.
+
+      _tray.setTitle("");
     }
   } : {
     label: "Log In with Spotify",
@@ -155,6 +159,7 @@ function manageTrayRightClick(_tray) {
     label: "Quit",
     click: function () {
       window.setClosable(true);
+      window = undefined;
 
       app.quit();
     }

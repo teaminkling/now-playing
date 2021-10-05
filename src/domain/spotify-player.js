@@ -35,7 +35,7 @@ exports.execute = function (parentWindow, tray) {
 
     if (localStorage.get("userUri")) {
       getCurrentPlayback();
-    } else {
+    } else if (parentWindow !== undefined) {
       // Change the renderer to show the login prompt rather than a loading symbol.
 
       sendToRendererProcess("login", {});
