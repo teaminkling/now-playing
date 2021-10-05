@@ -8,6 +8,7 @@ const errorReporter = require("../helpers/error-reporter");
 const authorizer = require("../data/authorization");
 const { SONG_TITLE_MAX_LENGTH, UPDATE_PERIOD } = require("../helpers/constants");
 const notifier = require("node-notifier");
+const { authenticate } = require("../data/authorization");
 
 ipcMain.on("shuffleButtonClicked", () => spotifyDataSource.shuffle(localStorage.get("accessToken"), true));
 ipcMain.on("unshuffleButtonClicked", () => spotifyDataSource.shuffle(localStorage.get("accessToken"), false));
@@ -22,7 +23,7 @@ ipcMain.on("addToLibraryClicked", (event, uri) => {
 
 let currentPlaybackURI;
 
-exports.execute = function(parentWindow, tray) {
+exports.execute = function (parentWindow, tray) {
   ipcMain.on("addToPlaylistButtonClicked", handleAddToPlaylistButtonClicked);
   ipcMain.on("playlistSelected", (event, data) => handlePlaylistSelected(data));
 
@@ -37,7 +38,7 @@ exports.execute = function(parentWindow, tray) {
           const mappedData = mappers.currentPlaybackToView(json);
           if (shouldShowTrackNotification(mappedData)) {
             notifier.notify(
-              mappers.notificationData(mappedData), function(error, response, metadata) {
+              mappers.notificationData(mappedData), function (error, response, metadata) {
                 const keyExists = Object.prototype.hasOwnProperty.call(metadata, "activationType");
                 if (keyExists && metadata["activationType"] === "actionClicked") {
                   spotifyDataSource.nextTrack(localStorage.get("accessToken")).then();
@@ -67,11 +68,13 @@ exports.execute = function(parentWindow, tray) {
         } else {
           sendToRendererProcess("loading", {});
 
-          // FIXME: this part used to be a callback to log in.
+          // TODO: This is a little less nice than it could be. Code cleanup would be valuable here.
+
+          authenticate();
         }
       })
       .catch(error => {
-        errorReporter.emit("getCurrentPlayback", error);
+        errorReporter.emit("getCurrentPlayback", error, true);
         sendToRendererProcess("noContent");
       });
   }
@@ -99,7 +102,7 @@ exports.execute = function(parentWindow, tray) {
         const mappedData = mappers.playlistsToView(data);
         sendToRendererProcess("playlistsReceived", mappedData);
       })
-      .catch(error => errorReporter.emit("getPlaylists", error));
+      .catch(error => errorReporter.emit("getPlaylists", error, true));
   }
 
   function handlePlaylistSelected(data) {
@@ -107,6 +110,6 @@ exports.execute = function(parentWindow, tray) {
     const { playlistId, uri } = data;
     spotifyDataSource.addTrackToPlaylist(accessToken, playlistId, uri)
       .then(response => response.error ? authorizer.execute(parentWindow) : sendToRendererProcess("trackAdded"))
-      .catch(error => errorReporter.emit("addTrackToPlaylist", error));
+      .catch(error => errorReporter.emit("addTrackToPlaylist", error, true));
   }
 };

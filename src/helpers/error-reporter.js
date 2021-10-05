@@ -2,8 +2,9 @@
 
 const isProduction = require('electron').app.isPackaged;
 const { ERROR_MESSAGES } = require('../helpers/constants');
+const { authenticate } = require('../data/authorization');
 
-exports.emit = function(errorMessageKey, error) {
+exports.emit = function(errorMessageKey, error, doReauthenticate = false) {
   const event = {
     message: ERROR_MESSAGES[errorMessageKey] || errorMessageKey,
     extra: { error }
@@ -13,5 +14,11 @@ exports.emit = function(errorMessageKey, error) {
 
   if (!isProduction) {
     console.log(event);
+  }
+
+  // Errors sometimes indicate a need to reauthenticate.
+
+  if (doReauthenticate) {
+    authenticate();
   }
 };
