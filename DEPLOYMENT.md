@@ -8,10 +8,8 @@ fairly easy to repeat distributions after the first-time setup:
 1. Join the [Apple Developer Program][apple-developer-program] (this will cost about AUD$150 a year).
 2. Use Keychain Access to create a [Certificate Signing Request][csr-apple].
 3. Use the CSR to create a [Developer ID Application certificate][certificate-create-apple].
-   a. This is for applications that are not packaged to the Mac App Store.
 4. Download that certificate and add it to your keychain.
-5. Create a `.env` file from `.env.example`.
-   a. You may have already done this.
+5. Create a `.env` file from `.env.example` if you haven't already done this.
 6. Log into your [Apple ID][apple-id] and create a new app-specific password.
 7. Add your Apple ID and app-specific password to the `.env` file.
 8. Create a `electron-builder.yml` file from `electron-builder.yml.example`.
