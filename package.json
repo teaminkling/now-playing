@@ -1,12 +1,11 @@
 {
   "name": "now-playing-for-spotify",
-  "version": "0.10.1",
+  "version": "0.10.2",
   "description": "A tool for macOS and Spotify to extend functionality of Spotify Desktop.",
   "main": "src/index.js",
   "scripts": {
     "start": "electron .",
-    "pack": "electron-builder --dir",
-    "dist": "electron-builder",
+    "dist": "electron-builder --arm64 --x64",
     "release": "build -p always",
     "postinstall": "electron-builder install-app-deps"
   },
