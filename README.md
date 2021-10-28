@@ -43,7 +43,7 @@ yarn install
 ```
 
 You then [must create and register an app][spotify-app-registration] in the Spotify Developer portal.
-Rename `.env. json.example` (file in the root of this project) to `.env.json` and update values.
+Rename `.env.json.example` (file in the root of this project) to `.env.json` and update values.
 
 To start the app, run:
 
