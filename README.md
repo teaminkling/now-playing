@@ -15,6 +15,8 @@ Now Playing at its heart is a mini-player and native system notifications when r
 
 ### Monterey/Big Sur Expanded Notifications
 
+> Now Playing now supports Apple Silicon natively!
+
 In Big Sur (and later) you can expand notifications to view the beautiful full-sized album art!
 
 ![](docs/img/screenshot_3.png)
