@@ -15,7 +15,7 @@ Now Playing at its heart is a mini-player and native system notifications when r
 
 ### Monterey/Big Sur Expanded Notifications
 
-> Now Playing now supports Apple Silicon natively!
+> Now Playing supports Apple Silicon natively!
 
 In Big Sur (and later) you can expand notifications to view the beautiful full-sized album art!
 
@@ -38,7 +38,7 @@ Download the `.dmg` file from the [latest release][latest-release], run it, and 
 
 Install dependencies:
 
-```
+```shell
 yarn install
 ```
 
@@ -47,7 +47,7 @@ Rename `.env.json.example` (file in the root of this project) to `.env.json` and
 
 To start the app, run:
 
-```
+```shell
 yarn start
 ```
 
