@@ -20,7 +20,7 @@
     "electron": "13.6.9",
     "electron-builder": "23.0.3",
     "electron-notarize": "1.2.1",
-    "eslint": "8.16.0"
+    "eslint": "8.17.0"
   },
   "dependencies": {
     "@electron/remote": "^1.2.2",
