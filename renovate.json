@@ -1,5 +1,37 @@
 {
   "extends": [
     "config:base"
+  ],
+  "packageRules": [
+    {
+      "groupName": "Dev Dependency Safe Update",
+      "matchDepTypes": [
+        "devDependencies"
+      ],
+      "matchUpdateTypes": [
+        "patch",
+        "minor"
+      ]
+    },
+    {
+      "groupName": "Dependency Safe Update",
+      "matchDepTypes": [
+        "dependencies"
+      ],
+      "matchUpdateTypes": [
+        "patch",
+        "minor"
+      ]
+    },
+    {
+      "groupName": "Peer Dependency Safe Update",
+      "matchDepTypes": [
+        "peerDependencies"
+      ],
+      "matchUpdateTypes": [
+        "patch",
+        "minor"
+      ]
+    }
   ]
 }
