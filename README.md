@@ -1,7 +1,7 @@
 # Now Playing (For Spotify)
 
 [![Maintainability][maintainability-badge]][maintainability-link]
-[![Issues](https://img.shields.io/github/issues/teaminkling/mac-spotify-np)][issues]
+[![Issues](https://img.shields.io/github/issues/teaminkling/now-playing)][issues]
 [![Downloads][github-downloads-badge]][releases]
 [![Latest Version][github-latest-release-badge]][latest-release]
 
@@ -34,12 +34,20 @@ Optionally, you can see the song you're currently listening to at a glance and q
 Download the `.dmg` file from the [latest release][latest-release], run it, and move the app to your system's
 `Application` folder.
 
+## Caveats
+
+- You cannot be in private listening mode for this app to work! This is a known limitation of the Spotify API.
+- Podcasts are only nominally supported.
+- We only support up to 50 playlists for quick-adding.
+- Playlist groups are not supported when quickly adding to a playlist.
+  - This is being worked on though!
+
 ## Local Development
 
 Install dependencies:
 
 ```shell
-yarn install
+npm install
 ```
 
 You then [must create and register an app][spotify-app-registration] in the Spotify Developer portal.
@@ -48,7 +56,7 @@ Rename `.env.json.example` (file in the root of this project) to `.env.json` and
 To start the app, run:
 
 ```shell
-yarn start
+npm run start
 ```
 
 ## Notes
@@ -66,17 +74,19 @@ This project uses the [MIT License](LICENSE).
 
 [maintainability-badge]:       https://api.codeclimate.com/v1/badges/87b6080da2e2dce357a2/maintainability
 
-[maintainability-link]:        https://codeclimate.com/github/teaminkling/mac-spotify-np/maintainability
+[maintainability-link]:        https://codeclimate.com/github/teaminkling/now-playing/maintainability
 
-[github-downloads-badge]:      https://img.shields.io/github/downloads/teaminkling/mac-spotify-np/total
+[github-downloads-badge]:      https://img.shields.io/github/downloads/teaminkling/now-playing/total
 
-[github-latest-release-badge]: https://img.shields.io/github/v/release/teaminkling/mac-spotify-np
+[github-latest-release-badge]: https://img.shields.io/github/v/release/teaminkling/now-playing
 
-[issues]:                      https://github.com/teaminkling/mac-spotify-np/issues
+[issues]:                      https://github.com/teaminkling/now-playing/issues
 
-[releases]:                    https://github.com/teaminkling/mac-spotify-np/releases
+[create-issue]:                https://github.com/teaminkling/now-playing/issues/new/choose
 
-[latest-release]:              https://github.com/teaminkling/mac-spotify-np/releases/latest
+[releases]:                    https://github.com/teaminkling/now-playing/releases
+
+[latest-release]:              https://github.com/teaminkling/now-playing/releases/latest
 
 [spotify-app-registration]:    https://developer.spotify.com/documentation/general/guides/app-settings
 

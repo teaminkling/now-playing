@@ -21,7 +21,7 @@ dmg:
 
   sign: false
 
-afterSign: scripts/notarize.js
+afterSign: scripts/notarize.cjs
 
 files: ["src/**/*", "package.json", ".env.json", "build/*"]
 

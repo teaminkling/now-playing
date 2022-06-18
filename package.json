@@ -4,10 +4,17 @@
   "description": "A notifier and mini-player for Spotify on macOS!",
   "main": "src/index.js",
   "scripts": {
-    "start": "electron .",
+    "build": "concurrently \"npm run build:main\" \"npm run build:renderer\"",
+    "build:main": "cross-env NODE_ENV=production TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.main.prod.ts",
+    "build:renderer": "cross-env NODE_ENV=production TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.renderer.prod.ts",
+    "postinstall": "ts-node .erb/scripts/check-native-dep.js && electron-builder install-app-deps && cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.renderer.dev.dll.ts",
+    "rebuild": "electron-rebuild --parallel --types prod,dev,optional --module-dir release/app",
+    "start": "ts-node ./.erb/scripts/check-port-in-use.js && npm run start:renderer",
+    "start:main": "cross-env NODE_ENV=development electronmon -r ts-node/register/transpile-only .",
+    "start:preload": "cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.preload.dev.ts",
+    "start:renderer": "cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack serve --config ./.erb/configs/webpack.config.renderer.dev.ts",
     "dist": "electron-builder --arm64 --x64",
-    "release": "build -p always",
-    "postinstall": "electron-builder install-app-deps"
+    "release": "build -p always"
   },
   "repository": {
     "type": "git",
@@ -15,18 +22,37 @@
   },
   "author": "teaminkling",
   "license": "MIT",
+  "engines": {
+    "node": "^16.13.1"
+  },
   "devDependencies": {
-    "dotenv": "16.0.1",
-    "electron": "13.6.9",
+    "@types/react": "^18.0.14",
+    "@types/react-dom": "^18.0.5",
+    "@types/source-map-support": "^0.5.4",
+    "@types/spotify-web-api-node": "^5.0.7",
+    "@types/uuid": "^8.3.4",
+    "@typescript-eslint/eslint-plugin": "^5.28.0",
+    "@typescript-eslint/parser": "^5.28.0",
+    "concurrently": "^7.2.2",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.0.1",
+    "electron": "15.5.7",
     "electron-builder": "23.0.3",
     "electron-notarize": "1.2.1",
-    "eslint": "8.18.0"
+    "eslint": "8.17.0",
+    "react": "^18.2.0",
+    "ts-node": "^10.8.1",
+    "webpack": "^5.73.0"
   },
   "dependencies": {
-    "@electron/remote": "^1.2.2",
+    "electron-debug": "^3.2.0",
     "electron-fetch": "^1.7.4",
-    "nconf": "^0.12.0",
+    "electron-store": "^8.0.2",
     "node-notifier": "^10.0.0",
-    "semver": "^7.3.5"
+    "react-dom": "^18.2.0",
+    "semver": "^7.3.5",
+    "source-map-support": "^0.5.21",
+    "spotify-web-api-node": "^5.0.2",
+    "uuid": "^8.3.2"
   }
 }

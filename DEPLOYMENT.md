@@ -28,7 +28,7 @@ iconutil -c icns build/icon.iconset
 After doing all of this, to distribute a binary release, run:
 
 ```
-yarn dist
+npm run dist
 ```
 
 This can take a while. When it's done, it will create a `.dmg` file in `dist/` (possibly a new directory).

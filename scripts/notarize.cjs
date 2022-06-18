@@ -1,8 +1,11 @@
-const { notarize } = require('electron-notarize');
+const {notarize} = require('electron-notarize');
+const path = require("path");
 
-/* Load environment variables. */
+// Load environment variables.
 
-require('dotenv').config();
+require("dotenv").config({
+  path: path.resolve(process.cwd(), "notarize.env"),
+});
 
 /**
  * Notarise a macOS application.
@@ -12,9 +15,9 @@ require('dotenv').config();
  * @param context the pipeline context from the electron-builder process
  * @returns {Promise<void>} the promise for notarisation
  */
-exports.default = async function notarizing(context) {
-  const { electronPlatformName, appOutDir } = context;
-  if (electronPlatformName !== 'darwin') {
+exports.default = async context => {
+  const {electronPlatformName, appOutDir} = context;
+  if (electronPlatformName !== "darwin") {
     throw Error("Can't sign on non-macOS platforms!");
   }
 

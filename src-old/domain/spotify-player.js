@@ -1,14 +1,14 @@
 "use strict";
 
-const { ipcMain } = require("electron");
+const {ipcMain} = require("electron");
 const localStorage = require("../data/local");
 const spotifyDataSource = require("../data/playback");
 const mappers = require("../helpers/mappers");
 const errorReporter = require("../helpers/error-reporter");
 const authorizer = require("../data/authorization");
-const { SONG_TITLE_MAX_LENGTH, UPDATE_PERIOD } = require("../helpers/constants");
+const {SONG_TITLE_MAX_LENGTH, UPDATE_PERIOD} = require("../helpers/constants");
 const notifier = require("node-notifier");
-const { authenticate } = require("../data/authorization");
+const {authenticate} = require("../data/authorization");
 
 ipcMain.on("shuffleButtonClicked", () => spotifyDataSource.shuffle(localStorage.get("accessToken"), true));
 ipcMain.on("unshuffleButtonClicked", () => spotifyDataSource.shuffle(localStorage.get("accessToken"), false));
@@ -27,8 +27,7 @@ exports.execute = function (parentWindow, tray) {
   ipcMain.on("addToPlaylistButtonClicked", handleAddToPlaylistButtonClicked);
   ipcMain.on("playlistSelected", (event, data) => handlePlaylistSelected(data));
 
-  // Spotify does not provide a webhook to third-party developers for things like song change. As a result, we have
-  // no choice but to make a HTTP request every single time to get song playback when not logged out.
+  // Spotify does not provide websocket support for song status; we must do frequent-polling.
 
   setInterval(() => {
     // Don't bother to get the track if we've got no hope of being logged in.
@@ -124,7 +123,7 @@ exports.execute = function (parentWindow, tray) {
 
   function handlePlaylistSelected(data) {
     const accessToken = localStorage.get("accessToken");
-    const { playlistId, uri } = data;
+    const {playlistId, uri} = data;
     spotifyDataSource.addTrackToPlaylist(accessToken, playlistId, uri)
       .then(response => response.error ? authorizer.execute(parentWindow) : sendToRendererProcess("trackAdded"))
       .catch(error => errorReporter.emit("addTrackToPlaylist", error, true));

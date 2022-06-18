@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "build",
+    "target": "es2021",
+    "lib": ["es2021", "dom"],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "jsx": "react-jsx",
+    "allowJs": false,
+    "strict": true,
+    "pretty": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "incremental": true
+  },
+  "include": [
+    "src",
+    "test",
+  ],
+  "exclude": [
+    "./node_modules"
+  ]
+}
