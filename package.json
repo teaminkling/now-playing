@@ -23,7 +23,7 @@
     "eslint": "8.17.0"
   },
   "dependencies": {
-    "@electron/remote": "^1.2.2",
+    "@electron/remote": "^2.0.0",
     "electron-fetch": "^1.7.4",
     "nconf": "^0.12.0",
     "node-notifier": "^10.0.0",
