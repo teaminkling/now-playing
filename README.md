@@ -5,6 +5,12 @@
 [![Downloads][github-downloads-badge]][releases]
 [![Latest Version][github-latest-release-badge]][latest-release]
 
+## Maintenance Note
+
+As of 19th August 2022, this application is [no longer being actively maintained](https://github.com/teaminkling/now-playing/issues/114). It may still work, but may break at any point in the future. While older, we recommend [Spotify Notifications](https://github.com/citruspi/Spotify-Notifications) as an alternative until Spotify themselves introduces macOS-native notifications.
+
+Thanks for using Now Playing!
+
 ## Features
 
 ### Mini-Player and Notifications
