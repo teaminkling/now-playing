@@ -18,9 +18,9 @@
   "devDependencies": {
     "dotenv": "16.0.1",
     "electron": "13.6.9",
-    "electron-builder": "23.1.0",
+    "electron-builder": "23.3.3",
     "electron-notarize": "1.2.1",
-    "eslint": "8.18.0"
+    "eslint": "8.22.0"
   },
   "dependencies": {
     "@electron/remote": "^1.2.2",
